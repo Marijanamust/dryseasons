@@ -1,0 +1,95 @@
+/* general */
+
+* {
+    box-sizing: border-box;
+    margin: 0px;
+    font-family: "Average", serif;
+}
+body {
+    width: 100%;
+    height: 100%;
+    background-color: #bbbbbb;
+}
+
+.mainDiv {
+    position: absolute;
+    top: 100px;
+    width: 100%;
+    height: 100%-100px;
+    background-color: #bbbbbb;
+}
+
+button {
+    background-color: #bbbbbb;
+    color: #02010f;
+    outline: 0;
+    border: 1px solid #02010f;
+    height: 30px;
+    border-radius: 10px;
+}
+button:hover {
+    background-color: #f3d3d3;
+    cursor: pointer;
+}
+.welcomeContainer {
+    width: 100%;
+    height: 100vh;
+    background-image: url("./sober.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-color: #bbbbbb;
+}
+
+.welcomeContainer a {
+    color: white;
+}
+
+header {
+    width: 100%;
+    position: fixed;
+    height: 100px;
+    width: 100%;
+    top: 0px;
+    left: 0px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 999;
+    background-color: #1f262a;
+    color: #bbbbbb;
+    margin: 0px;
+}
+
+header h2 {
+    font-family: "Montserrat", sans-serif;
+    border: 1px solid whitesmoke;
+    font-size: 30px;
+    margin-left: 20px;
+    padding: 5px;
+}
+
+.rightHead {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 600px;
+    margin-right: 20px;
+}
+
+header img {
+    height: 70px;
+    width: 70px;
+    object-fit: cover;
+    border-radius: 100%;
+    border: 1px solid #1f262a;
+}
+
+header a {
+    color: whitesmoke;
+    text-decoration: none;
+    padding: 5px;
+}
+header a:hover {
+    border: 1px solid whitesmoke;
+    color: #f3d3d3;
+}
