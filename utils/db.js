@@ -1,14 +1,14 @@
 const spicedPg = require("spiced-pg");
 let db;
 
-db = spicedPg(`postgres:postgres:postgres@localhost:5432/network`);
+db = spicedPg(`postgres:postgres:postgres@localhost:5432/final`);
 
 exports.addRegister = function(first, last, email, password) {
     return db
         .query(
             `INSERT INTO users (first, last, email, password)
         VALUES ($1, $2, $3, $4)
-        RETURNING id, first`,
+        RETURNING id, first, last, imageurl`,
             [first, last, email, password]
         )
         .then(({ rows }) => {
@@ -30,6 +30,33 @@ exports.getUser = function(user_id) {
             `SELECT id,first,last,imageurl, bio FROM users
                 WHERE id=$1`,
             [user_id]
+        )
+        .then(({ rows }) => {
+            return rows;
+        });
+};
+
+exports.insertEvent = function(
+    name,
+    date,
+    time,
+    location,
+    url,
+    description,
+    user_id
+) {
+    return db
+        .query(
+            `INSERT INTO events (name,
+            eventdate,
+            eventtime,
+            location,
+            imageurl,
+            description,
+            host_id)
+        VALUES ($1, $2, $3, $4,$5, $6, $7) RETURNING id
+        `,
+            [name, date, time, location, url, description, user_id]
         )
         .then(({ rows }) => {
             return rows;

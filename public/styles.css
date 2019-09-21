@@ -93,3 +93,20 @@ header a:hover {
     border: 1px solid whitesmoke;
     color: #f3d3d3;
 }
+
+.searchContainer img {
+    width: 100px;
+    height: 100px;
+}
+
+.searchContainer form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+input[type="date"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    display: none;
+}
