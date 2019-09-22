@@ -9,6 +9,7 @@ import { Events } from "./events";
 import { Create } from "./create";
 import { Register } from "./register";
 import { Login } from "./login";
+import { Update } from "./update";
 import { useDispatch, useSelector } from "react-redux";
 import { loggedIn } from "./actions";
 
@@ -46,14 +47,28 @@ export function App() {
                             }}
                         />
                         <Route
-                            path="/events/:id"
+                            path="/events/:eventId"
                             render={props => {
-                                return <Events match={props.match.params.id} />;
+                                return (
+                                    <Events
+                                        eventId={props.match.params.eventId}
+                                    />
+                                );
                             }}
                         />
                         <Route exact path="/map" component={Map} />
                         <Route exact path="/myprofile" component={Profile} />
-                        <Route exact path="/create" component={Create} />
+                        <Route path="/create" component={Create} />
+                        <Route
+                            path="/update/:eventId"
+                            render={props => {
+                                return (
+                                    <Update
+                                        eventId={props.match.params.eventId}
+                                    />
+                                );
+                            }}
+                        />
                         <Route exact path="/register" component={Register} />
                         <Route exact path="/login" component={Login} />
                     </div>

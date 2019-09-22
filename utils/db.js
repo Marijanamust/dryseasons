@@ -40,7 +40,8 @@ exports.insertEvent = function(
     name,
     date,
     time,
-    location,
+    location_lat,
+    location_lng,
     url,
     description,
     user_id
@@ -50,17 +51,135 @@ exports.insertEvent = function(
             `INSERT INTO events (name,
             eventdate,
             eventtime,
-            location,
+            location_lat,
+            location_lng,
             imageurl,
             description,
             host_id)
-        VALUES ($1, $2, $3, $4,$5, $6, $7) RETURNING id
+        VALUES ($1, $2, $3, $4,$5, $6, $7, $8) RETURNING id
         `,
-            [name, date, time, location, url, description, user_id]
+            [
+                name,
+                date,
+                time,
+                location_lat,
+                location_lng,
+                url,
+                description,
+                user_id
+            ]
         )
         .then(({ rows }) => {
             return rows;
         });
+};
+
+exports.getEvent = function(id) {
+    return db
+        .query(
+            `
+    SELECT events.id, name,
+    eventdate,
+    eventtime,
+    location_lat,
+    location_lng,
+    events.imageurl AS eventimage,
+    description,
+    host_id, users.first, users.last, users.imageurl AS userimage
+    FROM events
+    JOIN users
+    ON (events.id = $1 AND host_id = users.id)
+
+`,
+            [id]
+        )
+        .then(({ rows }) => {
+            return rows;
+        });
+};
+
+exports.attend = function(event_id, user_id) {
+    return db
+        .query(
+            `INSERT INTO atendees (event_id, user_id)
+        VALUES ($1, $2)
+        `,
+            [event_id, user_id]
+        )
+        .then(({ rows }) => {
+            return rows;
+        });
+};
+
+exports.unattend = function(event_id, user_id) {
+    return db.query(
+        `DELETE FROM atendees
+            WHERE (event_id=$1 AND user_id=$2)
+        `,
+        [event_id, user_id]
+    );
+};
+
+exports.getAtendees = function(event_id) {
+    return db
+        .query(
+            `
+    SELECT users.first, users.last, users.imageurl AS userimage, users.id
+    FROM atendees
+    JOIN users
+    ON ( atendees.event_id= $1 AND atendees.user_id = users.id)
+
+`,
+            [event_id]
+        )
+        .then(({ rows }) => {
+            return rows;
+        });
+};
+
+exports.updateEvent = function(
+    name,
+    date,
+    time,
+    location_lat,
+    location_lng,
+    url,
+    description,
+    event_id
+) {
+    return db.query(
+        `UPDATE events
+        SET name = ($1), eventdate = ($2), eventtime =($3), location_lat=($4),
+        location_lng=($5), imageurl=($6), description=($7)
+        WHERE id=($7)`,
+        [
+            name,
+            date,
+            time,
+            location_lat,
+            location_lng,
+            url,
+            description,
+            event_id
+        ]
+    );
+};
+
+exports.updateEventNoFile = function(
+    name,
+    date,
+    time,
+    location_lat,
+    location_lng,
+    description,
+    event_id
+) {
+    return db.query(
+        `UPDATE events
+        SET name = ($1), eventdate = ($2), eventtime =($3), location_lat=($4), location_lng=($5), description=($6)
+        WHERE id=($7)`,
+        [name, date, time, location_lat, location_lng, description, event_id]
+    );
 };
 
 exports.updateAvatar = function(url, user_id) {
@@ -75,163 +194,3 @@ exports.updateAvatar = function(url, user_id) {
             return rows;
         });
 };
-
-exports.updateBio = function(bio, user_id) {
-    return db
-        .query(
-            `UPDATE users
-        SET bio = ($1)
-        WHERE id=($2) RETURNING bio`,
-            [bio, user_id]
-        )
-        .then(({ rows }) => {
-            return rows;
-        });
-};
-
-exports.getLastUsers = function(user_id) {
-    return db
-        .query(
-            `SELECT id,first,last,imageurl, bio FROM users
-            WHERE id != ($1)
-            ORDER BY id DESC
-            LIMIT 3
-            `,
-            [user_id]
-        )
-        .then(({ rows }) => {
-            return rows;
-        });
-};
-
-exports.getMatchingUsers = function(val, user_id) {
-    return db
-        .query(
-            `SELECT id,first,last,imageurl, bio FROM users
-        WHERE first || ' ' || last ILIKE $1
-        AND id != ($2)`,
-            [val + "%", user_id]
-        )
-        .then(({ rows }) => {
-            return rows;
-        });
-};
-
-exports.getFriendState = function(profile_id, other_id) {
-    return db
-        .query(
-            `SELECT * FROM friendships
-            WHERE (receiver_id= $1 AND sender_id=$2)
-            OR (receiver_id=$2 AND sender_id=$1)`,
-            [profile_id, other_id]
-        )
-        .then(({ rows }) => {
-            return rows;
-        });
-};
-
-exports.addFriendRequest = function(profile_id, other_id) {
-    return db.query(
-        `INSERT INTO friendships (sender_id, receiver_id)
-        VALUES ($1, $2)`,
-        [profile_id, other_id]
-    );
-};
-
-exports.cancelFriendRequest = function(profile_id, other_id) {
-    return db.query(
-        `DELETE FROM friendships
-        WHERE (sender_id= $1 AND receiver_id=$2)`,
-        [profile_id, other_id]
-    );
-};
-
-exports.acceptFriendRequest = function(profile_id, other_id) {
-    return db.query(
-        `UPDATE friendships
-        SET accepted=true
-        WHERE (receiver_id= $1 AND sender_id=$2)`,
-        [profile_id, other_id]
-    );
-};
-
-exports.unfriend = function(profile_id, other_id) {
-    return db.query(
-        `DELETE FROM friendships
-        WHERE (receiver_id= $1 AND sender_id=$2)
-        OR (receiver_id=$2 AND sender_id=$1)`,
-        [profile_id, other_id]
-    );
-};
-
-exports.deleteprofile = function(user_id) {
-    return db.query(
-        `DELETE FROM users
-        WHERE id=$1`,
-        [user_id]
-    );
-};
-
-exports.getAllFriends = function(user_id) {
-    return db
-        .query(
-            `
-    SELECT users.id, first, last, imageurl, accepted
-    FROM friendships
-    JOIN users
-    ON (accepted = false AND receiver_id = $1 AND sender_id = users.id)
-    OR (accepted = true AND receiver_id = $1 AND sender_id = users.id)
-    OR (accepted = true AND sender_id = $1 AND receiver_id = users.id)
-`,
-            [user_id]
-        )
-        .then(({ rows }) => {
-            return rows;
-        });
-};
-
-exports.getChatMessages = function() {
-    return db
-        .query(
-            `SELECT message, imageurl, first, last, chatmessages.created_at
-            FROM chatmessages
-            JOIN users ON (sender_id=users.id AND receiver_id IS NULL)
-        ORDER BY chatmessages.id DESC
-        LIMIT 10`
-        )
-        .then(({ rows }) => {
-            return rows;
-        });
-};
-
-exports.insertMessage = function(sender_id, message, receiver_id) {
-    return db.query(
-        `INSERT INTO chatmessages (sender_id, message, receiver_id)
-        VALUES ($1, $2, $3)`,
-        [sender_id, message, receiver_id]
-    );
-};
-
-exports.getPrivateMessages = function(user_id, other_id) {
-    return db
-        .query(
-            `SELECT message, imageurl, first, last, users.id,chatmessages.created_at
-            FROM chatmessages
-            JOIN users
-            ON (sender_id = $1 AND receiver_id=$2 AND users.id=$1)
-            OR (sender_id = $2 AND receiver_id=$1 AND users.id=$2)
-            ORDER BY chatmessages.id DESC
-        LIMIT 10`,
-            [user_id, other_id]
-        )
-        .then(({ rows }) => {
-            return rows;
-        });
-};
-// `SELECT message, imageurl, first, last, chatmessages.created_at
-// FROM chatmessages
-// WHERE (sender_id = user_id AND receiver_id=other_id)
-// OR (sender_id = other_id AND receiver_id=receiver_id)
-// JOIN users ON sender_id=users.id AND receiver_id
-// ORDER BY chatmessages.id DESC
-// LIMIT 10`;

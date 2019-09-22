@@ -12,14 +12,21 @@ const config = require("./config");
 const server = require("http").Server(app);
 const io = require("socket.io")(server, { origins: "localhost:8080" });
 const { hash, compare } = require("./utils/bc.js");
+var moment = require("moment");
 const {
     addRegister,
     getHash,
     getUser,
     updateAvatar,
-    insertEvent
+    insertEvent,
+    getEvent,
+    attend,
+    unattend,
+    getAtendees,
+    updateEvent,
+    updateEventNoFile
 } = require("./utils/db.js");
-
+const localeData = moment.localeData();
 // for heroku list you app with star in the end, List myapp.herokuapp.com:*
 
 const diskStorage = multer.diskStorage({
@@ -162,10 +169,13 @@ app.post("/login", function(req, res) {
 });
 
 app.get("/loggedin", (req, res) => {
+    console.log("logged in got dispatched");
     if (req.session.user) {
+        console.log("req session user", req.session.user);
         res.json(req.session.user);
     } else {
         res.json(false);
+        console.log("user is not logged in");
     }
 });
 
@@ -177,7 +187,14 @@ app.post("/addevent", uploader.single("file"), s3.upload, (req, res) => {
     const url =
         config.s3Url + `${req.session.user.user_id}/${req.file.filename}`;
     // console.log(url);
-    const { name, date, time, location, description } = req.body;
+    const {
+        name,
+        date,
+        time,
+        location_lat,
+        location_lng,
+        description
+    } = req.body;
     console.log("url", url);
     console.log("req.body", req.body);
 
@@ -185,15 +202,41 @@ app.post("/addevent", uploader.single("file"), s3.upload, (req, res) => {
         name,
         date,
         time,
-        location,
+        location_lat,
+        location_lng,
         url,
         description,
         req.session.user.user_id
     )
         .then(data => {
             console.log("GOT THE TABLE", data[0].id);
+            attend(data[0].id, req.session.user.user_id).then(() => {
+                res.json(data[0].id);
+            });
+        })
+        .catch(error => {
+            console.log(error);
+        });
+});
 
-            res.json(data[0].id);
+app.get("/geteventdetails/:eventId", (req, res) => {
+    console.log("IN GET VENT");
+    Promise.all([getEvent(req.params.eventId), getAtendees(req.params.eventId)])
+        .then(data => {
+            console.log("event", data[0][0]);
+            console.log("atend", data[1]);
+
+            // let mydate = moment(data[0].eventdate).format("dddd, MMMM Do YYYY");
+            // moment(data[0].eventdate)
+            //     .calendar()
+            //     .format("dddd");
+            // console.log("my date", mydate);
+            let details = {
+                ...data[0][0],
+
+                atendees: data[1]
+            };
+            res.json(details);
         })
         .catch(error => {
             console.log(error);
@@ -204,6 +247,98 @@ app.get("/logout", (req, res) => {
     req.session = null;
     res.redirect("/search");
 });
+
+app.post("/attend/:eventId", (req, res) => {
+    console.log("REQ BODY", req.session.user.user_id);
+    console.log("REq params", req.params.eventId);
+    attend(req.params.eventId, req.session.user.user_id)
+        .then(() => {
+            console.log("inserted the atendee");
+            getAtendees(req.params.eventId).then(data => {
+                console.log(data[0]);
+                res.json(data);
+            });
+        })
+        .catch(error => {
+            console.log(error);
+        });
+});
+
+app.post("/unattend/:eventId", (req, res) => {
+    console.log("user id", req.session.user.user_id);
+    console.log("REq params", req.params.eventId);
+    unattend(req.params.eventId, req.session.user.user_id)
+        .then(() => {
+            console.log("unattended");
+            getAtendees(req.params.eventId).then(data => {
+                console.log(data[0]);
+                res.json(data);
+            });
+        })
+        .catch(error => {
+            console.log(error);
+        });
+});
+
+app.post(
+    "/updateevent/:eventId",
+    uploader.single("file"),
+    s3.upload,
+    (req, res) => {
+        const {
+            name,
+            eventdate,
+            eventtime,
+            location_lat,
+            location_lng,
+            description
+        } = req.body;
+        if (!req.file) {
+            updateEventNoFile(
+                name,
+                eventdate,
+                eventtime,
+                location_lat,
+                location_lng,
+                description,
+                req.params.eventId
+            )
+                .then(data => {
+                    console.log("UPDATED");
+                    res.json(true);
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+        } else {
+            const url =
+                config.s3Url +
+                `${req.session.user.user_id}/${req.file.filename}`;
+            // console.log(url);
+
+            // console.log("url", url);
+            // console.log("req.body", req.body);
+
+            updateEvent(
+                name,
+                eventdate,
+                eventtime,
+                location_lat,
+                location_lng,
+                url,
+                description,
+                req.params.eventId
+            )
+                .then(data => {
+                    console.log("UPDATED");
+                    res.json(true);
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+        }
+    }
+);
 
 //this route always needs to be last, out everything above it..
 app.get("*", function(req, res) {

@@ -17,11 +17,20 @@ CREATE TABLE events(
     name VARCHAR(35) NOT NULL CHECK (name <> ''),
     eventdate DATE NOT NULL,
     eventtime TIME NOT NULL,
-    location VARCHAR(100) NOT NULL CHECK (location <> ''),
+    location_lat VARCHAR(100) NOT NULL CHECK (location_lat <> ''),
+    location_lng VARCHAR(100) NOT NULL CHECK (location_lng <> ''),
     imageurl VARCHAR(300),
     description TEXT,
     host_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+DROP TABLE IF EXISTS atendees;
+
+CREATE TABLE atendees(
+    id SERIAL PRIMARY KEY,
+    event_id INT NOT NULL REFERENCES events(id) ON DELETE CASCADE,
+    user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE
 );
 
 -- DROP TABLE IF EXISTS chatmessages;

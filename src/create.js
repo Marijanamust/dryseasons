@@ -3,28 +3,31 @@ import axios from "./axios";
 import { useState } from "react";
 import { Redirect, Link } from "react-router-dom";
 // import DatePicker from "react-datepicker";
+import PlacesAutocomplete from "react-places-autocomplete";
+import { LocationSearchInput } from "./location";
 
 export function Create() {
-    const [event, setEvent] = useState({});
+    const [input, setInput] = useState({});
     const [file, setFile] = useState();
     const [eventId, seteventId] = useState(false);
     // const [date, setDate] = useState(new Date());
     // const [startDate, setStartDate] = useState(new Date());
 
     const handleChange = e => {
-        setEvent({ ...event, [e.target.name]: e.target.value });
+        setInput({ ...input, [e.target.name]: e.target.value });
 
-        console.log(event);
+        console.log(input);
     };
     const handleClick = e => {
         e.preventDefault();
 
         var formData = new FormData();
-        formData.append("name", event.name);
-        formData.append("description", event.description);
-        formData.append("time", event.time);
-        formData.append("date", event.date);
-        formData.append("location", event.location);
+        formData.append("name", input.name);
+        formData.append("description", input.description);
+        formData.append("time", input.time);
+        formData.append("date", input.date);
+        formData.append("location_lat", input.location_lat);
+        formData.append("location_lng", input.location_lng);
         formData.append("file", file);
 
         axios.post("/addevent", formData).then(response => {
@@ -35,6 +38,14 @@ export function Create() {
         console.log("I want to add file");
 
         setFile(e.target.files[0]);
+    };
+
+    const setLocation = location => {
+        setInput({
+            ...input,
+            location_lat: location.lat,
+            location_lng: location.lng
+        });
     };
 
     return (
@@ -65,12 +76,8 @@ export function Create() {
                         onChange={handleChange}
                     />
                     <label htmlFor="location">Location of the event</label>
-                    <input
-                        name="location"
-                        id="location"
-                        type="text"
-                        onChange={handleChange}
-                    />
+
+                    <LocationSearchInput setLocation={setLocation} />
                     <label htmlFor="location">Set the image of the event</label>
                     <img src="/sober.jpg" />
                     <input

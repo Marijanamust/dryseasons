@@ -15,32 +15,33 @@ const s3 = new aws.S3({
 
 exports.upload = function(req, res, next) {
     if (!req.file) {
-        return res.send(500);
+        next();
+    } else {
+        // console.log("FILE DATA", req.file);
+        // console.log("USER", req.session.user.user_id);
+        const filename = `${req.session.user.user_id}/${req.file.filename}`;
+        console.log("FILENAME", filename);
+        const { mimetype, size, path } = req.file;
+        const promise = s3
+            .putObject({
+                Bucket: "spicedling",
+                ACL: "public-read",
+                Key: filename,
+                Body: fs.createReadStream(path),
+                ContentType: mimetype,
+                ContentLength: size
+            })
+            .promise();
+        promise
+            .then(() => {
+                next();
+                fs.unlink(path, () => {});
+            })
+            .catch(err => {
+                console.log(err);
+                res.sendStatus(500);
+            });
     }
-    // console.log("FILE DATA", req.file);
-    // console.log("USER", req.session.user.user_id);
-    const filename = `${req.session.user.user_id}/${req.file.filename}`;
-    console.log("FILENAME", filename);
-    const { mimetype, size, path } = req.file;
-    const promise = s3
-        .putObject({
-            Bucket: "spicedling",
-            ACL: "public-read",
-            Key: filename,
-            Body: fs.createReadStream(path),
-            ContentType: mimetype,
-            ContentLength: size
-        })
-        .promise();
-    promise
-        .then(() => {
-            next();
-            fs.unlink(path, () => {});
-        })
-        .catch(err => {
-            console.log(err);
-            res.sendStatus(500);
-        });
 };
 
 exports.delete = function(user_id) {
