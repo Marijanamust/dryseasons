@@ -3,18 +3,20 @@ import axios from "./axios";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 var moment = require("moment");
-var moment = require("moment");
+
+import { useDispatch, useSelector } from "react-redux";
 
 export function Search() {
     const [weekEvents, setWeekEvents] = useState([]);
     const [allWeekEvents, setAllWeekEvents] = useState([]);
     const [myEvents, setMyEvents] = useState([]);
     const [allMyEvents, setAllMyEvents] = useState([]);
-    const [input, setInput] = useState("something");
+
     const [showNext, setShowNext] = useState(true);
     const [showPrev, setShowPrev] = useState(false);
     const [showNextWeek, setShowNextWeek] = useState(true);
     const [showPrevWeek, setShowPrevWeek] = useState(false);
+
     const [categories, setCategories] = useState([
         "Outdoors & Adventure",
         "Tech",
@@ -34,7 +36,9 @@ export function Search() {
         "Social",
         "Weird"
     ]);
-
+    const user = useSelector(state => {
+        return state.user;
+    });
     useEffect(() => {
         axios
             .get("/getmyevents")
@@ -52,6 +56,7 @@ export function Search() {
             .catch(error => {
                 console.log(error);
             });
+
         axios
             .get("/getthisweek")
             .then(response => {
@@ -124,48 +129,54 @@ export function Search() {
 
     return (
         <div className="allEventsContainer">
-            <div className="yourEvents">
-                <h2>Your events</h2>
-                <div className="yourContainer">
-                    <ul>
-                        {showPrev && <p onClick={prevEvent}>Previous</p>}
-                        {myEvents != "" ? (
-                            myEvents.map(myevent => (
-                                <li key={myevent.id}>
-                                    <Link
-                                        to={{
-                                            pathname: `/events/${myevent.id}`
-                                        }}
-                                        className="eventBox"
-                                    >
-                                        <img
-                                            src={
-                                                myevent.eventimage ||
-                                                "/sheep.jfif"
-                                            }
-                                        />
-                                        <p>{myevent.eventdate}</p>
-                                        <p>{myevent.name}</p>
-                                    </Link>
+            {user && (
+                <div className="yourEvents">
+                    <h2>Your events</h2>
+
+                    <div className="yourContainer">
+                        <ul>
+                            {showPrev && <p onClick={prevEvent}>Previous</p>}
+                            {myEvents != "" ? (
+                                myEvents.map(myevent => (
+                                    <li key={myevent.id}>
+                                        <Link
+                                            to={{
+                                                pathname: `/events/${
+                                                    myevent.id
+                                                }`
+                                            }}
+                                            className="eventBox"
+                                        >
+                                            <img
+                                                src={
+                                                    myevent.eventimage ||
+                                                    "/sheep.jfif"
+                                                }
+                                            />
+                                            <p>{myevent.eventdate}</p>
+                                            <p>{myevent.name}</p>
+                                        </Link>
+                                    </li>
+                                ))
+                            ) : (
+                                <li>
+                                    You have no events. Why don´t you attend
+                                    some?
                                 </li>
-                            ))
-                        ) : (
-                            <li>
-                                You have no events. Why don´t you attend some?
-                            </li>
-                        )}
-                        {showNext && <p onClick={nextEvent}>Next</p>}
-                    </ul>
-                    <Link
-                        to={{
-                            pathname: `/myprofile`
-                        }}
-                        className="eventBox"
-                    >
-                        Show All
-                    </Link>
+                            )}
+                            {showNext && <p onClick={nextEvent}>Next</p>}
+                        </ul>
+                        <Link
+                            to={{
+                                pathname: `/myprofile`
+                            }}
+                            className="eventBox"
+                        >
+                            Show All
+                        </Link>
+                    </div>
                 </div>
-            </div>
+            )}
 
             <div className="eventsThisWeek">
                 <h2>Events this week</h2>

@@ -45,6 +45,7 @@ exports.insertEvent = function(
     address,
     url,
     description,
+    category,
     user_id
 ) {
     return db
@@ -55,9 +56,9 @@ exports.insertEvent = function(
             location_lat,
             location_lng,address,
             imageurl,
-            description,
+            description,category,
             host_id)
-        VALUES ($1, $2, $3, $4,$5, $6, $7, $8,$9) RETURNING id
+        VALUES ($1, $2, $3, $4,$5, $6, $7, $8,$9,$10) RETURNING id
         `,
             [
                 name,
@@ -68,6 +69,7 @@ exports.insertEvent = function(
                 address,
                 url,
                 description,
+                category,
                 user_id
             ]
         )
@@ -86,7 +88,7 @@ exports.getEvent = function(id) {
     location_lat,
     location_lng,address,
     events.imageurl AS eventimage,
-    description,
+    description,category,
     host_id, users.first, users.last, users.imageurl AS userimage
     FROM events
     JOIN users
@@ -148,14 +150,15 @@ exports.updateEvent = function(
     address,
     url,
     description,
+    category,
     event_id
 ) {
     return db
         .query(
             `UPDATE events
         SET name = ($1), eventdate = ($2), eventtime =($3), location_lat=($4),
-        location_lng=($5), address=($6),imageurl=($7), description=($8)
-        WHERE id=($9) RETURNING eventtime`,
+        location_lng=($5), address=($6),imageurl=($7), description=($8),category=($9)
+        WHERE id=($10) RETURNING eventtime`,
             [
                 name,
                 date,
@@ -165,6 +168,7 @@ exports.updateEvent = function(
                 address,
                 url,
                 description,
+                category,
                 event_id
             ]
         )
@@ -181,12 +185,13 @@ exports.updateEventNoFile = function(
     location_lng,
     address,
     description,
+    category,
     event_id
 ) {
     return db.query(
         `UPDATE events
-        SET name = ($1), eventdate = ($2), eventtime =($3), location_lat=($4), location_lng=($5), address=($6),description=($7)
-        WHERE id=($8)`,
+        SET name = ($1), eventdate = ($2), eventtime =($3), location_lat=($4), location_lng=($5), address=($6),description=($7),category=($8),
+        WHERE id=($9)`,
         [
             name,
             date,
@@ -195,6 +200,7 @@ exports.updateEventNoFile = function(
             location_lng,
             address,
             description,
+            category,
             event_id
         ]
     );
@@ -235,6 +241,26 @@ exports.getThisWeek = function() {
     ORDER BY eventdate ASC
 
 `
+        )
+        .then(({ rows }) => {
+            return rows;
+        });
+};
+
+exports.getCategory = function(category) {
+    return db
+        .query(
+            `
+    SELECT events.id, name,
+    eventdate,
+    eventtime,
+    events.imageurl AS eventimage
+    FROM events
+    WHERE events.category ILIKE ($1) AND eventdate > now()
+    ORDER BY eventdate ASC
+
+`,
+            [category]
         )
         .then(({ rows }) => {
             return rows;

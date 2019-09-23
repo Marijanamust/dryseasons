@@ -26,7 +26,8 @@ const {
     updateEvent,
     updateEventNoFile,
     getMyEvents,
-    getThisWeek
+    getThisWeek,
+    getCategory
 } = require("./utils/db.js");
 const localeData = moment.localeData();
 // for heroku list you app with star in the end, List myapp.herokuapp.com:*
@@ -196,7 +197,8 @@ app.post("/addevent", uploader.single("file"), s3.upload, (req, res) => {
         location_lat,
         location_lng,
         address,
-        description
+        description,
+        category
     } = req.body;
     console.log("url", url);
     console.log("req.body", req.body);
@@ -216,6 +218,7 @@ app.post("/addevent", uploader.single("file"), s3.upload, (req, res) => {
         address,
         url,
         description,
+        category,
         req.session.user.user_id
     )
         .then(data => {
@@ -307,7 +310,8 @@ app.post(
             location_lat,
             location_lng,
             address,
-            description
+            description,
+            category
         } = req.body;
         if (!req.file) {
             updateEventNoFile(
@@ -318,6 +322,7 @@ app.post(
                 location_lng,
                 address,
                 description,
+                category,
                 req.params.eventId
             )
                 .then(data => {
@@ -345,6 +350,7 @@ app.post(
                 address,
                 url,
                 description,
+                category,
                 req.params.eventId
             )
                 .then(data => {
@@ -376,6 +382,24 @@ app.get("/getthisweek", (req, res) => {
         .then(data => {
             console.log("this week", data);
 
+            res.json(data);
+        })
+        .catch(error => {
+            console.log(error);
+        });
+});
+
+app.get("/find/:categoryName", (req, res) => {
+    console.log(req.params.categoryName);
+    let category = req.params.categoryName;
+    console.log(category);
+    console.log(typeof category);
+    getCategory(category)
+        .then(data => {
+            console.log(data);
+            console.log(data[0].category);
+            console.log(category);
+            console.log(data[0].category == category);
             res.json(data);
         })
         .catch(error => {

@@ -14,6 +14,25 @@ export function Update({ eventId }) {
     const [file, setFile] = useState();
     const [redirect, setRedirect] = useState(false);
     const [preview, setPreview] = useState("/sober.jpg");
+    const [categories, setCategories] = useState([
+        "Outdoors & Adventure",
+        "Tech",
+        "Family",
+        "Health & Wellness",
+        "Sports & Fitness",
+        "Food & Drink",
+        "Language & Culture",
+        "Music",
+        "LGBTQ",
+        "Film",
+        "Games",
+        "Arts",
+        "Dance",
+        "Pets",
+        "Hobbies",
+        "Social",
+        "Weird"
+    ]);
 
     const user = useSelector(state => {
         return state.user;
@@ -75,6 +94,7 @@ export function Update({ eventId }) {
         formData.append("eventdate", iso);
         formData.append("location_lat", input.location_lat);
         formData.append("location_lng", input.location_lng);
+        formData.append("category", input.category);
         formData.append("address", input.address);
         formData.append("file", file);
         console.log("POST TIME");
@@ -119,6 +139,19 @@ export function Update({ eventId }) {
                             defaultValue={input.name}
                             onChange={handleChange}
                         />
+                        <label htmlFor="name">Category of the event</label>
+
+                        <select
+                            name="category"
+                            id="category"
+                            type="text"
+                            placeholder="Name"
+                            onChange={handleChange}
+                        >
+                            {categories.map(category => (
+                                <option value={category}>{category}</option>
+                            ))}
+                        </select>
                         <label htmlFor="time">Time of the event</label>
 
                         <input

@@ -7,6 +7,7 @@ import { Profile } from "./profile";
 import { Users } from "./users";
 import { Events } from "./events";
 import { Create } from "./create";
+import { Category } from "./category";
 import { Register } from "./register";
 import { Login } from "./login";
 import { Update } from "./update";
@@ -35,7 +36,7 @@ export function App() {
                             {user && <Link to="/create">Create an event</Link>}
                             {!user && <Link to="/login">Login</Link>}
                             {!user && <Link to="/register">Register</Link>}
-
+                            <Link to="/search">Search</Link>
                             {user && <a href="/logout">Logout</a>}
                         </div>
                     </header>
@@ -60,6 +61,18 @@ export function App() {
                         <Route exact path="/map" component={Map} />
                         <Route exact path="/myprofile" component={Profile} />
                         <Route path="/create" component={Create} />
+                        <Route
+                            path="/category/:categoryName"
+                            render={props => {
+                                return (
+                                    <Category
+                                        categoryName={
+                                            props.match.params.categoryName
+                                        }
+                                    />
+                                );
+                            }}
+                        />
                         <Route
                             path="/update/:eventId"
                             render={props => {

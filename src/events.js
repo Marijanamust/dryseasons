@@ -16,13 +16,16 @@ export function Events({ eventId }) {
     const dispatch = useDispatch();
 
     console.log("EVENTID", eventId);
-    useEffect(() => {
-        dispatch(getEventDetails(eventId));
+    useEffect(
+        () => {
+            dispatch(getEventDetails(eventId));
 
-        // return ()=>{
-        //     props.resetList
-        // }
-    }, []);
+            // return ()=>{
+            //     props.resetList
+            // }
+        },
+        [eventId]
+    );
     const attending = useSelector(state => {
         console.log("event details", state.eventDetails);
         {
@@ -53,11 +56,12 @@ export function Events({ eventId }) {
                         <p>{eventDetails.eventdate}</p>
                         <h1>{eventDetails.name}</h1>
                         <div className="host">
-                            <img src={"/sober.jpg" || eventDetails.userimage} />
+                            <img src={eventDetails.userimage || "/sober.jpg"} />
                             <p>
                                 Hosted by {eventDetails.first}{" "}
                                 {eventDetails.last}{" "}
                             </p>
+                            <p>In category {eventDetails.category}</p>
                         </div>
 
                         {user && eventDetails.host_id == user.user_id && (

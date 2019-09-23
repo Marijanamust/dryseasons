@@ -11,6 +11,25 @@ export function Create() {
     const [file, setFile] = useState();
     const [preview, setPreview] = useState("/sober.jpg");
     const [eventId, seteventId] = useState(false);
+    const [categories, setCategories] = useState([
+        "Outdoors & Adventure",
+        "Tech",
+        "Family",
+        "Health & Wellness",
+        "Sports & Fitness",
+        "Food & Drink",
+        "Language & Culture",
+        "Music",
+        "LGBTQ",
+        "Film",
+        "Games",
+        "Arts",
+        "Dance",
+        "Pets",
+        "Hobbies",
+        "Social",
+        "Weird"
+    ]);
     // const [date, setDate] = useState(new Date());
     // const [startDate, setStartDate] = useState(new Date());
 
@@ -75,13 +94,7 @@ export function Create() {
                         onChange={handleChange}
                     />
                     <label htmlFor="name">Category of the event</label>
-                    <input
-                        name="category"
-                        id="category"
-                        type="text"
-                        placeholder="Name"
-                        onChange={handleChange}
-                    />
+
                     <select
                         name="category"
                         id="category"
@@ -89,7 +102,9 @@ export function Create() {
                         placeholder="Name"
                         onChange={handleChange}
                     >
-                        <option />
+                        {categories.map(category => (
+                            <option value={category}>{category}</option>
+                        ))}
                     </select>
 
                     <label htmlFor="time">Time of the event</label>
