@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import axios from "./axios";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Redirect, Link } from "react-router-dom";
 var moment = require("moment");
 import PlacesAutocomplete from "react-places-autocomplete";
@@ -13,6 +13,7 @@ export function Update({ eventId }) {
     const [input, setInput] = useState({});
     const [file, setFile] = useState();
     const [redirect, setRedirect] = useState(false);
+    const [preview, setPreview] = useState("/sober.jpg");
 
     const user = useSelector(state => {
         return state.user;
@@ -21,19 +22,31 @@ export function Update({ eventId }) {
         return state.eventDetails;
     });
 
-    const dispatch = useDispatch();
+    const inputFile = useRef(null);
+    const onButtonClick = () => {
+        // `current` points to the mounted file input element
+        inputFile.current.click();
+    };
 
     useEffect(() => {
         axios
             .get("/geteventdetails/" + eventId)
             .then(response => {
                 console.log(response.data);
+                console.log(response.data.eventdate);
+                let display = new Date(response.data.eventdate);
+                // let mydate = moment(response.data.eventdate).format(
+                //     "dddd, MMMM Do YYYY"
+                // );
+
+                let iso = display.toISOString();
+                let endDate = moment(iso).format("YYYY-MM-DD");
                 let details = {
                     ...response.data,
-                    eventdate: moment(response.data.eventdate).format(
-                        "D/M/YYYY"
-                    )
+                    eventdate: endDate
                 };
+                console.log("display", display);
+                console.log("iso", iso);
                 setInput(details);
             })
             .catch(error => {
@@ -53,18 +66,22 @@ export function Update({ eventId }) {
         // console.log("INPUT", input);
         // console.log("NAME", input.name);
         // console.log("DESC", input.description);
+        let iso = new Date(input.eventdate).toISOString();
+        console.log(iso);
         var formData = new FormData();
         formData.append("name", input.name);
         formData.append("description", input.description);
         formData.append("eventtime", input.eventtime);
-        formData.append("eventdate", input.eventdate);
+        formData.append("eventdate", iso);
         formData.append("location_lat", input.location_lat);
         formData.append("location_lng", input.location_lng);
+        formData.append("address", input.address);
         formData.append("file", file);
         console.log("POST TIME");
         axios
             .post("/updateevent/" + eventId, formData)
             .then(response => {
+                console.log("NEW DATE");
                 console.log("success");
                 setRedirect(true);
             })
@@ -74,8 +91,10 @@ export function Update({ eventId }) {
     };
     const addFile = e => {
         console.log("I want to add file");
-
         setFile(e.target.files[0]);
+        console.log(URL.createObjectURL(e.target.files[0]));
+        setPreview(URL.createObjectURL(e.target.files[0]));
+        console.log(preview);
     };
     const setLocation = location => {
         setInput({
@@ -120,21 +139,26 @@ export function Update({ eventId }) {
                             onChange={handleChange}
                         />
                         <label htmlFor="location">Location of the event</label>
-                        <LocationSearchInput setLocation={setLocation} />
+                        <LocationSearchInput
+                            setLocation={setLocation}
+                            oldAddress={input.address}
+                        />
+                        <p>input.address {input.address}</p>
 
                         <label htmlFor="file">Set the image of the event</label>
-                        <img src={input.eventimage || "/sober.jpg"} />
+                        <img src={preview} onClick={onButtonClick} />
+
                         <input
                             onChange={addFile}
                             type="file"
+                            id="file"
                             name="file"
+                            ref={inputFile}
                             accept="image/*"
+                            style={{ display: "none" }}
                             className="inputfile"
                             id="file"
                         />
-                        <label htmlFor="file" className="fileLabel">
-                            Choose a file
-                        </label>
 
                         <label htmlFor="description">Description</label>
                         <textarea

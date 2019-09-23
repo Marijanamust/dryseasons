@@ -25,11 +25,17 @@ export function Events({ eventId }) {
     }, []);
     const attending = useSelector(state => {
         console.log("event details", state.eventDetails);
+        {
+            state.eventDetails &&
+                console.log("DATE", state.eventDetails.eventdate);
+        }
         if (
             state.user &&
             state.eventDetails &&
             state.eventDetails.atendees.length &&
-            state.eventDetails.atendees.filter(atendee => {
+            state.eventDetails.atendees.find(atendee => {
+                console.log("atendee.id", atendee.id);
+                console.log("user.user_id", user.user_id);
                 return atendee.id == user.user_id;
             })
         ) {
@@ -87,8 +93,17 @@ export function Events({ eventId }) {
                         )}
                     </div>
                     <div className="eventDesc">
-                        <img src={"/sheep.jfif" || eventDetails.eventimage} />
+                        <img src={eventDetails.eventimage || "/sheep.jfif"} />
+                        <h2>Location</h2>
+                        <a
+                            href={`https://maps.google.com/?ll=${
+                                eventDetails.location_lat
+                            },${eventDetails.location_lng}`}
+                        >
+                            {eventDetails.address}
+                        </a>
                         <h2>Description</h2>
+
                         <p>{eventDetails.description}</p>
                     </div>
 

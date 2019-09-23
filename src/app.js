@@ -32,9 +32,10 @@ export function App() {
                     <header>
                         <h2>SOBER BERLIN</h2>
                         <div className="rightHead">
-                            <Link to="/create">Create an event</Link>
+                            {user && <Link to="/create">Create an event</Link>}
                             {!user && <Link to="/login">Login</Link>}
                             {!user && <Link to="/register">Register</Link>}
+
                             {user && <a href="/logout">Logout</a>}
                         </div>
                     </header>

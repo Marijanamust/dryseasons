@@ -8,7 +8,7 @@
 body {
     width: 100%;
     height: 100%;
-    background-color: #bbbbbb;
+    background-color: whitesmoke;
 }
 
 .mainDiv {
@@ -16,11 +16,11 @@ body {
     top: 100px;
     width: 100%;
     height: 100%-100px;
-    background-color: #bbbbbb;
+    background-color: whitesmoke;
 }
 
 button {
-    background-color: #bbbbbb;
+    background-color: whitesmoke;
     color: #02010f;
     outline: 0;
     border: 1px solid #02010f;
@@ -37,7 +37,7 @@ button:hover {
     background-image: url("./sober.jpg");
     background-size: cover;
     background-repeat: no-repeat;
-    background-color: #bbbbbb;
+    background-color: whitesmoke;
 }
 
 .welcomeContainer a {
@@ -55,14 +55,14 @@ header {
     justify-content: space-between;
     align-items: center;
     z-index: 999;
-    background-color: #1f262a;
-    color: #bbbbbb;
+    background-color: whitesmoke;
+    color: #1f262a;
     margin: 0px;
 }
 
 header h2 {
     font-family: "Montserrat", sans-serif;
-    border: 1px solid whitesmoke;
+    border: 1px solid #1f262a
     font-size: 30px;
     margin-left: 20px;
     padding: 5px;
@@ -85,12 +85,12 @@ header img {
 }
 
 header a {
-    color: whitesmoke;
+    color: #1f262a;
     text-decoration: none;
     padding: 5px;
 }
 header a:hover {
-    border: 1px solid whitesmoke;
+    border: 1px solid #1f262a;
     color: #f3d3d3;
 }
 
@@ -123,4 +123,69 @@ input[type="date"]::-webkit-inner-spin-button {
 .eventAttendees img {
     width: 50px;
     height: 50px;
+    border-radius: 100%;
+}
+
+.imgAndDeleteContainer img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+}
+
+[type="text"],
+[type="password"],
+[type="email"],
+[type="number"],
+[type="search"],
+[type="url"],
+[type="color"],
+[type="date"],
+[type="time"],
+textarea {
+    display: block;
+    box-sizing: border-box;
+    width: 300px;
+    height: 2.5625rem;
+    padding: 0.5rem;
+    border: 2px solid #e5e5e5;
+    margin: 0 0 1rem;
+    font-family: inherit;
+    font-size: 1.125rem;
+    color: #2e2e2e;
+    background-color: #fefefe;
+    border-radius: 4px;
+    transition: box-shadow 0.5s, border-color 0.25s ease-in-out;
+}
+
+textarea {
+    width: 300px;
+    height: 200px;
+}
+
+header {
+    border-bottom: 1px solid blue;
+}
+
+/* .inputfile {
+    width: 0.1px;
+    height: 0.1px;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    z-index: -1;
+} */
+
+.allEventsContainer img{
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+}
+
+ul {
+    list-style: none;
+}
+
+ul {
+display: flex;
+justify-content: center;
 }

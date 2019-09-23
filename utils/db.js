@@ -42,6 +42,7 @@ exports.insertEvent = function(
     time,
     location_lat,
     location_lng,
+    address,
     url,
     description,
     user_id
@@ -52,11 +53,11 @@ exports.insertEvent = function(
             eventdate,
             eventtime,
             location_lat,
-            location_lng,
+            location_lng,address,
             imageurl,
             description,
             host_id)
-        VALUES ($1, $2, $3, $4,$5, $6, $7, $8) RETURNING id
+        VALUES ($1, $2, $3, $4,$5, $6, $7, $8,$9) RETURNING id
         `,
             [
                 name,
@@ -64,6 +65,7 @@ exports.insertEvent = function(
                 time,
                 location_lat,
                 location_lng,
+                address,
                 url,
                 description,
                 user_id
@@ -82,7 +84,7 @@ exports.getEvent = function(id) {
     eventdate,
     eventtime,
     location_lat,
-    location_lng,
+    location_lng,address,
     events.imageurl AS eventimage,
     description,
     host_id, users.first, users.last, users.imageurl AS userimage
@@ -143,26 +145,32 @@ exports.updateEvent = function(
     time,
     location_lat,
     location_lng,
+    address,
     url,
     description,
     event_id
 ) {
-    return db.query(
-        `UPDATE events
+    return db
+        .query(
+            `UPDATE events
         SET name = ($1), eventdate = ($2), eventtime =($3), location_lat=($4),
-        location_lng=($5), imageurl=($6), description=($7)
-        WHERE id=($7)`,
-        [
-            name,
-            date,
-            time,
-            location_lat,
-            location_lng,
-            url,
-            description,
-            event_id
-        ]
-    );
+        location_lng=($5), address=($6),imageurl=($7), description=($8)
+        WHERE id=($9) RETURNING eventtime`,
+            [
+                name,
+                date,
+                time,
+                location_lat,
+                location_lng,
+                address,
+                url,
+                description,
+                event_id
+            ]
+        )
+        .then(({ rows }) => {
+            return rows;
+        });
 };
 
 exports.updateEventNoFile = function(
@@ -171,15 +179,66 @@ exports.updateEventNoFile = function(
     time,
     location_lat,
     location_lng,
+    address,
     description,
     event_id
 ) {
     return db.query(
         `UPDATE events
-        SET name = ($1), eventdate = ($2), eventtime =($3), location_lat=($4), location_lng=($5), description=($6)
-        WHERE id=($7)`,
-        [name, date, time, location_lat, location_lng, description, event_id]
+        SET name = ($1), eventdate = ($2), eventtime =($3), location_lat=($4), location_lng=($5), address=($6),description=($7)
+        WHERE id=($8)`,
+        [
+            name,
+            date,
+            time,
+            location_lat,
+            location_lng,
+            address,
+            description,
+            event_id
+        ]
     );
+};
+
+exports.getMyEvents = function(id) {
+    return db
+        .query(
+            `
+    SELECT events.id, name,
+    eventdate,
+    eventtime,
+    events.imageurl AS eventimage
+    FROM events
+    JOIN atendees
+    ON (events.host_id = $1 AND events.id=atendees.event_id)
+    OR (atendees.user_id=$1 AND events.id=atendees.event_id)
+    ORDER BY events.id DESC
+
+`,
+            [id]
+        )
+        .then(({ rows }) => {
+            return rows;
+        });
+};
+
+exports.getThisWeek = function() {
+    return db
+        .query(
+            `
+    SELECT events.id, name,
+    eventdate,
+    eventtime,
+    events.imageurl AS eventimage
+    FROM events
+    WHERE eventdate > now() AND eventdate < now() + interval '1 week'
+    ORDER BY eventdate ASC
+
+`
+        )
+        .then(({ rows }) => {
+            return rows;
+        });
 };
 
 exports.updateAvatar = function(url, user_id) {

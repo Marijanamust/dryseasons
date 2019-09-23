@@ -22,13 +22,13 @@ export function getEventDetails(eventId) {
     return axios
         .get("/geteventdetails/" + eventId)
         .then(response => {
-            console.log(response.data);
-            let mydate = moment(response.data.eventdate).format(
-                "dddd, MMMM Do YYYY"
-            );
+            console.log();
             return {
                 type: "EVENT_DETAILS",
-                eventDetails: { ...response.data, eventdate: mydate }
+                eventDetails: {
+                    ...response.data,
+                    eventdate: response.data.eventdate
+                }
             };
         })
         .catch(error => {
@@ -61,6 +61,25 @@ export function unattend(eventId) {
             return {
                 type: "ATTEND",
                 atendees: response.data
+            };
+        })
+        .catch(error => {
+            console.log(error);
+        });
+}
+
+export function getMyEvents() {
+    console.log("IM in actions");
+    return axios
+        .get("/getmyevents")
+        .then(response => {
+            console.log(response.data);
+            let mydate = moment(response.data.eventdate).format(
+                "dddd, MMMM Do YYYY"
+            );
+            return {
+                type: "MY_EVENTS",
+                eventDetails: { ...response.data, eventdate: mydate }
             };
         })
         .catch(error => {

@@ -24,7 +24,9 @@ const {
     unattend,
     getAtendees,
     updateEvent,
-    updateEventNoFile
+    updateEventNoFile,
+    getMyEvents,
+    getThisWeek
 } = require("./utils/db.js");
 const localeData = moment.localeData();
 // for heroku list you app with star in the end, List myapp.herokuapp.com:*
@@ -182,21 +184,28 @@ app.get("/loggedin", (req, res) => {
 app.post("/addevent", uploader.single("file"), s3.upload, (req, res) => {
     // req.file refers to the file that was just uploaded
     // req.body still refers to the values we type in the input fields
-
+    console.log("DATE", req.body.date);
     // const { filename } = req.file;
     const url =
         config.s3Url + `${req.session.user.user_id}/${req.file.filename}`;
     // console.log(url);
-    const {
+    let {
         name,
         date,
         time,
         location_lat,
         location_lng,
+        address,
         description
     } = req.body;
     console.log("url", url);
     console.log("req.body", req.body);
+    // Date.prototype.addDays = function(days) {
+    //     let dat = new Date(this.valueOf());
+    //     dat.setDate(dat.getDate() + days);
+    //     return dat;
+    // };
+    // date = new Date(date).addDays(1);
 
     insertEvent(
         name,
@@ -204,6 +213,7 @@ app.post("/addevent", uploader.single("file"), s3.upload, (req, res) => {
         time,
         location_lat,
         location_lng,
+        address,
         url,
         description,
         req.session.user.user_id
@@ -225,18 +235,22 @@ app.get("/geteventdetails/:eventId", (req, res) => {
         .then(data => {
             console.log("event", data[0][0]);
             console.log("atend", data[1]);
-
+            console.log("DATE", data[0][0].eventdate);
             // let mydate = moment(data[0].eventdate).format("dddd, MMMM Do YYYY");
             // moment(data[0].eventdate)
             //     .calendar()
             //     .format("dddd");
             // console.log("my date", mydate);
-            let details = {
-                ...data[0][0],
+            if (data[0].length) {
+                let details = {
+                    ...data[0][0],
 
-                atendees: data[1]
-            };
-            res.json(details);
+                    atendees: data[1]
+                };
+                res.json(details);
+            } else {
+                res.json(false);
+            }
         })
         .catch(error => {
             console.log(error);
@@ -285,12 +299,14 @@ app.post(
     uploader.single("file"),
     s3.upload,
     (req, res) => {
+        console.log("DATE", req.body.eventdate);
         const {
             name,
             eventdate,
             eventtime,
             location_lat,
             location_lng,
+            address,
             description
         } = req.body;
         if (!req.file) {
@@ -300,6 +316,7 @@ app.post(
                 eventtime,
                 location_lat,
                 location_lng,
+                address,
                 description,
                 req.params.eventId
             )
@@ -325,6 +342,7 @@ app.post(
                 eventtime,
                 location_lat,
                 location_lng,
+                address,
                 url,
                 description,
                 req.params.eventId
@@ -339,6 +357,31 @@ app.post(
         }
     }
 );
+app.get("/getmyevents", (req, res) => {
+    console.log("IN GET my events");
+    getMyEvents(req.session.user.user_id)
+        .then(data => {
+            console.log("events", data);
+
+            res.json(data);
+        })
+        .catch(error => {
+            console.log(error);
+        });
+});
+
+app.get("/getthisweek", (req, res) => {
+    console.log("IN GET this week events");
+    getThisWeek()
+        .then(data => {
+            console.log("this week", data);
+
+            res.json(data);
+        })
+        .catch(error => {
+            console.log(error);
+        });
+});
 
 //this route always needs to be last, out everything above it..
 app.get("*", function(req, res) {

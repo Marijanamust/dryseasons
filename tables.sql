@@ -19,8 +19,10 @@ CREATE TABLE events(
     eventtime TIME NOT NULL,
     location_lat VARCHAR(100) NOT NULL CHECK (location_lat <> ''),
     location_lng VARCHAR(100) NOT NULL CHECK (location_lng <> ''),
+    address VARCHAR(100) NOT NULL CHECK (address<> ''),
     imageurl VARCHAR(300),
     description TEXT,
+    category VARCHAR (100) NOT NULL,
     host_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

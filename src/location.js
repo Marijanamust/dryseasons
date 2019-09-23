@@ -23,6 +23,7 @@ export class LocationSearchInput extends React.Component {
             .then(results => getLatLng(results[0]))
             .then(latLng => {
                 console.log("Success", latLng);
+                latLng = { ...latLng, address: address };
                 this.props.setLocation(latLng);
             })
             .catch(error => console.error("Error", error));
