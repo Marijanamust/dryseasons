@@ -27,7 +27,7 @@ exports.getHash = function(email) {
 exports.getUser = function(user_id) {
     return db
         .query(
-            `SELECT id,first,last,imageurl, bio FROM users
+            `SELECT id,first,last,imageurl FROM users
                 WHERE id=$1`,
             [user_id]
         )
@@ -214,7 +214,7 @@ exports.getMyEvents = function(id) {
     return db
         .query(
             `
-    SELECT events.id, name,
+    SELECT events.id, name,host_id,
     eventdate,
     eventtime,
     events.imageurl AS eventimage
@@ -222,7 +222,8 @@ exports.getMyEvents = function(id) {
     JOIN atendees
     ON (events.host_id = $1 AND events.id=atendees.event_id)
     OR (atendees.user_id=$1 AND events.id=atendees.event_id)
-    ORDER BY events.id DESC
+    WHERE eventdate > now()
+    ORDER BY eventdate ASC
 
 `,
             [id]
@@ -271,6 +272,42 @@ exports.getCategory = function(category) {
         });
 };
 
+exports.getAllEvents = function() {
+    return db
+        .query(
+            `
+    SELECT events.id, name,
+    eventdate,
+    eventtime,
+    events.imageurl AS eventimage
+    FROM events
+    WHERE eventdate > now()- interval '1 day'
+    ORDER BY eventdate ASC
+
+`
+        )
+        .then(({ rows }) => {
+            return rows;
+        });
+};
+
+exports.getPopular = function() {
+    return db
+        .query(
+            `SELECT events.id, events.id, name,
+            eventdate,
+            eventtime,
+            events.imageurl AS eventimage,COUNT(event_id) AS event_count
+    FROM events LEFT JOIN atendees
+    ON events.id = atendees.event_id AND eventdate > now()- interval '1 day'
+    GROUP BY events.id
+    ORDER BY event_count DESC
+    LIMIT 10`
+        )
+        .then(({ rows }) => {
+            return rows;
+        });
+};
 exports.updateAvatar = function(url, user_id) {
     return db
         .query(

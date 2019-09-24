@@ -27,7 +27,11 @@ export function getEventDetails(eventId) {
                 type: "EVENT_DETAILS",
                 eventDetails: {
                     ...response.data,
-                    eventdate: response.data.eventdate
+                    eventdate: response.data.eventdate,
+                    eventtime: moment(
+                        response.data.eventtime,
+                        "HH:mm:ss"
+                    ).format("hh:mm A")
                 }
             };
         })
@@ -69,7 +73,6 @@ export function unattend(eventId) {
 }
 
 export function getMyEvents() {
-    console.log("IM in actions");
     return axios
         .get("/getmyevents")
         .then(response => {
@@ -77,9 +80,28 @@ export function getMyEvents() {
             let mydate = moment(response.data.eventdate).format(
                 "dddd, MMMM Do YYYY"
             );
+
             return {
                 type: "MY_EVENTS",
-                eventDetails: { ...response.data, eventdate: mydate }
+                myEvents: response.data.map(eachevent => {
+                    return { ...eachevent, eventdate: mydate };
+                })
+            };
+        })
+        .catch(error => {
+            console.log(error);
+        });
+}
+
+export function changeAvatarAction(formData) {
+    console.log("IM in actions");
+    return axios
+        .post("/upload", formData)
+        .then(response => {
+            console.log(response);
+            return {
+                type: "CHANGE_AVATAR",
+                imageurl: response.data.imageurl
             };
         })
         .catch(error => {

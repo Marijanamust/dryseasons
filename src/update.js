@@ -48,6 +48,7 @@ export function Update({ eventId }) {
     };
 
     useEffect(() => {
+        console.log("User", user);
         axios
             .get("/geteventdetails/" + eventId)
             .then(response => {
@@ -185,7 +186,10 @@ export function Update({ eventId }) {
                         <p>input.address {input.address}</p>
 
                         <label htmlFor="file">Set the image of the event</label>
-                        <img src={preview} onClick={onButtonClick} />
+                        <img
+                            src={input.eventimage || preview}
+                            onClick={onButtonClick}
+                        />
 
                         <input
                             onChange={addFile}

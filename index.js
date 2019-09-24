@@ -27,7 +27,9 @@ const {
     updateEventNoFile,
     getMyEvents,
     getThisWeek,
-    getCategory
+    getCategory,
+    getAllEvents,
+    getPopular
 } = require("./utils/db.js");
 const localeData = moment.localeData();
 // for heroku list you app with star in the end, List myapp.herokuapp.com:*
@@ -91,14 +93,6 @@ if (process.env.NODE_ENV != "production") {
 
 app.get("/register", (req, res) => {
     if (req.session.user) {
-        res.redirect("/search");
-    } else {
-        res.sendFile(__dirname + "/index.html");
-    }
-});
-
-app.get("/register", (req, res) => {
-    if (req.session.user) {
         console.log("in register");
         res.redirect("/search");
     } else {
@@ -111,6 +105,19 @@ app.get("/login", (req, res) => {
         res.redirect("/search");
     } else {
         res.sendFile(__dirname + "/index.html");
+    }
+});
+app.post("/upload", uploader.single("file"), s3.upload, async (req, res) => {
+    const url =
+        config.s3Url + `${req.session.user.user_id}/${req.file.filename}`;
+    console.log(url);
+    try {
+        const data = await updateAvatar(url, req.session.user.user_id);
+        console.log("image", data);
+        res.json(data[0]);
+    } catch (error) {
+        console.log(error);
+        res.json(false);
     }
 });
 
@@ -174,8 +181,14 @@ app.post("/login", function(req, res) {
 app.get("/loggedin", (req, res) => {
     console.log("logged in got dispatched");
     if (req.session.user) {
-        console.log("req session user", req.session.user);
-        res.json(req.session.user);
+        console.log("req session user", req.session.user.user_id);
+        getUser(req.session.user.user_id)
+            .then(data => {
+                res.json(data[0]);
+            })
+            .catch(error => {
+                console.log(error);
+            });
     } else {
         res.json(false);
         console.log("user is not logged in");
@@ -389,20 +402,44 @@ app.get("/getthisweek", (req, res) => {
         });
 });
 
-app.get("/find/:categoryName", (req, res) => {
-    console.log(req.params.categoryName);
-    let category = req.params.categoryName;
-    console.log(category);
-    console.log(typeof category);
-    getCategory(category)
+app.get("/getpopular", (req, res) => {
+    console.log("IN GET popular events");
+    getPopular()
         .then(data => {
-            console.log(data);
+            console.log("popular", data);
 
             res.json(data);
         })
         .catch(error => {
             console.log(error);
         });
+});
+
+app.get("/find/:categoryName", (req, res) => {
+    let category = req.params.categoryName;
+    console.log(category);
+    if (req.params.categoryName == "Show all events") {
+        console.log("Im in all events");
+        getAllEvents()
+            .then(data => {
+                console.log(data);
+
+                res.json(data);
+            })
+            .catch(error => {
+                console.log(error);
+            });
+    } else {
+        getCategory(category)
+            .then(data => {
+                console.log(data);
+
+                res.json(data);
+            })
+            .catch(error => {
+                console.log(error);
+            });
+    }
 });
 
 //this route always needs to be last, out everything above it..

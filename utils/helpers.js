@@ -1,39 +1,94 @@
+var moment = require("moment");
+
 exports.parseDate = function(created_at) {
     var date = new Date(Date.parse(created_at));
     var user_date = new Date();
     var diff = Math.floor((user_date - date) / 1000);
-    if (diff <= 1) {
-        return "just now";
-    }
-    if (diff < 20) {
-        return diff + " seconds ago";
-    }
-    if (diff < 40) {
-        return "half a minute ago";
-    }
-    if (diff < 60) {
-        return "less than a minute ago";
-    }
-    if (diff <= 90) {
-        return "one minute ago";
-    }
-    if (diff <= 3540) {
-        return Math.round(diff / 60) + " minutes ago";
-    }
-    if (diff <= 5400) {
-        return "1 hour ago";
-    }
-    if (diff <= 86400) {
-        return Math.round(diff / 3600) + " hours ago";
-    }
+
     if (diff <= 129600) {
         return "1 day ago";
     }
-    if (diff < 604800) {
-        return Math.round(diff / 86400) + " days ago";
+    if (diff > 604800) {
+        return "in " + Math.round(diff / 86400) + " days";
     }
-    if (diff <= 777600) {
-        return "1 week ago";
+    if (diff >= 777600) {
+        return "in one week";
     }
     return "on " + date;
+};
+
+exports.showEvents = function(time, allMyEvents) {
+    let today = moment(new Date());
+    let tomorrow = moment(new Date()).add(1, "days");
+    let nextWeek = moment(new Date()).add(1, "week");
+    let showEvents;
+    if (time == "Tomorrow") {
+        console.log("Im in tomorrow");
+        console.log("Im in function");
+
+        showEvents = allMyEvents.filter(eachevent => {
+            if (
+                moment(eachevent.eventdate, "dddd, MMMM Do YYYY").isSame(
+                    tomorrow,
+                    "d"
+                )
+            ) {
+                return eachevent;
+            }
+        });
+    } else if (time == "This week") {
+        console.log("im in this week");
+
+        showEvents = allMyEvents.filter(eachevent => {
+            // console.log(new Date(eachevent.eventdate));
+            if (
+                moment(eachevent.eventdate, "dddd, MMMM Do YYYY").isSame(
+                    new Date(),
+                    "week"
+                )
+            ) {
+                console.log(eachevent.eventdate);
+                return eachevent;
+            }
+        });
+    } else if (time == "Next week") {
+        console.log("im in next week");
+
+        showEvents = allMyEvents.filter(eachevent => {
+            // console.log(new Date(eachevent.eventdate));
+            if (
+                moment(eachevent.eventdate, "dddd, MMMM Do YYYY").isSame(
+                    nextWeek,
+                    "week"
+                )
+            ) {
+                console.log(eachevent.eventdate);
+                return eachevent;
+            }
+        });
+    } else if (time == "Today") {
+        showEvents = allMyEvents.filter(eachevent => {
+            if (
+                moment(eachevent.eventdate, "dddd, MMMM Do YYYY").isSame(
+                    today,
+                    "d"
+                )
+            ) {
+                return eachevent;
+            }
+        });
+    } else if (time == "All events") {
+        showEvents = allMyEvents;
+    }
+
+    return showEvents;
+};
+
+exports.adjustTime = function(arr) {
+    return arr.map(eachevent => {
+        return {
+            ...eachevent,
+            eventdate: moment(eachevent.eventdate).format("dddd, MMMM Do YYYY")
+        };
+    });
 };

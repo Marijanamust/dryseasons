@@ -38,8 +38,9 @@ export function Events({ eventId }) {
             state.eventDetails.atendees.length &&
             state.eventDetails.atendees.find(atendee => {
                 console.log("atendee.id", atendee.id);
-                console.log("user.user_id", user.user_id);
-                return atendee.id == user.user_id;
+                console.log("user.user_id", user.id);
+                console.log("host", eventDetails.host_id);
+                return atendee.id == user.id;
             })
         ) {
             return true;
@@ -54,6 +55,7 @@ export function Events({ eventId }) {
                 <div className="eventContainer">
                     <div className="eventIntro">
                         <p>{eventDetails.eventdate}</p>
+                        <p>{eventDetails.eventtime}</p>
                         <h1>{eventDetails.name}</h1>
                         <div className="host">
                             <img src={eventDetails.userimage || "/sober.jpg"} />
@@ -64,7 +66,7 @@ export function Events({ eventId }) {
                             <p>In category {eventDetails.category}</p>
                         </div>
 
-                        {user && eventDetails.host_id == user.user_id && (
+                        {user && eventDetails.host_id == user.id && (
                             <Link
                                 to={{
                                     pathname: `/update/${eventId}`

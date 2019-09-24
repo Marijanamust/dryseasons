@@ -4,7 +4,7 @@ import { BrowserRouter, Route, Link } from "react-router-dom";
 import { socket } from "./socket";
 import { Search } from "./search";
 import { Profile } from "./profile";
-import { Users } from "./users";
+
 import { Events } from "./events";
 import { Create } from "./create";
 import { Category } from "./category";
@@ -37,17 +37,16 @@ export function App() {
                             {!user && <Link to="/login">Login</Link>}
                             {!user && <Link to="/register">Register</Link>}
                             <Link to="/search">Search</Link>
+                            {user && (
+                                <Link to="/myprofile">Hi, {user.first}</Link>
+                            )}
+
                             {user && <a href="/logout">Logout</a>}
                         </div>
                     </header>
                     <div className="mainDiv">
                         <Route exact path="/search" component={Search} />
-                        <Route
-                            path="/users/:id"
-                            render={props => {
-                                return <Users match={props.match.params.id} />;
-                            }}
-                        />
+
                         <Route
                             path="/events/:eventId"
                             render={props => {

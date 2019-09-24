@@ -45,5 +45,20 @@ export default function reducer(state = {}, action) {
             eventDetails: { ...state.eventDetails, atendees: action.atendees }
         };
     }
+
+    if (action.type === "MY_EVENTS") {
+        state = {
+            ...state,
+            myEvents: action.myEvents
+        };
+    }
+
+    if (action.type === "CHANGE_AVATAR") {
+        console.log(action.imageurl);
+        state = {
+            ...state,
+            user: { ...state.user, imageurl: action.imageurl }
+        };
+    }
     return state;
 }

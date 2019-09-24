@@ -175,9 +175,9 @@ header {
     z-index: -1;
 } */
 
-.allEventsContainer img{
-    width: 100px;
-    height: 100px;
+.allEventsContainer img, .imgAndDeleteContainer img{
+    width: 200px;
+    height: 200px;
     object-fit: cover;
 }
 
@@ -188,4 +188,10 @@ ul {
 ul {
 display: flex;
 justify-content: center;
+}
+
+li img{
+
+    height:200px;
+
 }

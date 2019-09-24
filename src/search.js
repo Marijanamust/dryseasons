@@ -3,6 +3,7 @@ import axios from "./axios";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 var moment = require("moment");
+import { showEvents, adjustTime } from "../utils/helpers";
 
 import { useDispatch, useSelector } from "react-redux";
 
@@ -11,7 +12,7 @@ export function Search() {
     const [allWeekEvents, setAllWeekEvents] = useState([]);
     const [myEvents, setMyEvents] = useState([]);
     const [allMyEvents, setAllMyEvents] = useState([]);
-
+    const [popularEvents, setPopularEvents] = useState([]);
     const [showNext, setShowNext] = useState(true);
     const [showPrev, setShowPrev] = useState(false);
     const [showNextWeek, setShowNextWeek] = useState(true);
@@ -34,7 +35,8 @@ export function Search() {
         "Pets",
         "Hobbies",
         "Social",
-        "Weird"
+        "Weird",
+        "Show all events"
     ]);
     const user = useSelector(state => {
         return state.user;
@@ -73,18 +75,19 @@ export function Search() {
             .catch(error => {
                 console.log(error);
             });
+        axios
+            .get("/getpopular")
+            .then(response => {
+                console.log(response.data);
+
+                let popular = adjustTime(response.data);
+                setPopularEvents(popular);
+            })
+            .catch(error => {
+                console.log(error);
+            });
     }, []);
 
-    const adjustTime = function(arr) {
-        return arr.map(eachevent => {
-            return {
-                ...eachevent,
-                eventdate: moment(eachevent.eventdate).format(
-                    "dddd, MMMM Do YYYY"
-                )
-            };
-        });
-    };
     const nextEvent = function() {
         setShowPrev(true);
         let what = allMyEvents.findIndex(events => {
@@ -129,7 +132,7 @@ export function Search() {
 
     return (
         <div className="allEventsContainer">
-            {user && (
+            {user && myEvents != "" && (
                 <div className="yourEvents">
                     <h2>Your events</h2>
 
@@ -179,7 +182,7 @@ export function Search() {
             )}
 
             <div className="eventsThisWeek">
-                <h2>Events this week</h2>
+                <h2>Events coming up soon</h2>
                 <div className="weekContainer">
                     <ul>
                         {showPrevWeek && (
@@ -222,15 +225,43 @@ export function Search() {
                     </Link>
                 </div>
             </div>
-            <div className="browse by category">
-                <h2>Browse by category</h2>
-                {categories.map(category => (
-                    <div key={category}>
-                        <Link to={{ pathname: `/category/${category}` }}>
-                            {category}
-                        </Link>
-                    </div>
-                ))}
+            <div className="horizontal">
+                <div className="popContainer">
+                    <ul>
+                        {popularEvents != "" &&
+                            popularEvents.map(myevent => (
+                                <li key={myevent.id}>
+                                    <Link
+                                        to={{
+                                            pathname: `/events/${myevent.id}`
+                                        }}
+                                        className="eventBox"
+                                    >
+                                        <img
+                                            src={
+                                                myevent.eventimage ||
+                                                "/sheep.jfif"
+                                            }
+                                        />
+                                        <p>{myevent.eventdate}</p>
+                                        <p>{myevent.name}</p>
+                                        <p>{myevent.event_count}</p>
+                                    </Link>
+                                </li>
+                            ))}
+                    </ul>
+                </div>
+
+                <div className="browse by category">
+                    <h2>Browse by category</h2>
+                    {categories.map(category => (
+                        <div key={category}>
+                            <Link to={{ pathname: `/category/${category}` }}>
+                                {category}
+                            </Link>
+                        </div>
+                    ))}
+                </div>
             </div>
         </div>
     );

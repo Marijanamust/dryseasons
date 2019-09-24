@@ -3,6 +3,7 @@ import axios from "./axios";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 var moment = require("moment");
+import { showEvents, adjustTime } from "../utils/helpers";
 
 import { useDispatch, useSelector } from "react-redux";
 
@@ -60,83 +61,10 @@ export function Category({ categoryName }) {
         [categoryName]
     );
 
-    const adjustTime = function(arr) {
-        return arr.map(eachevent => {
-            return {
-                ...eachevent,
-                eventdate: moment(eachevent.eventdate).format(
-                    "dddd, MMMM Do YYYY"
-                )
-            };
-        });
-    };
     useEffect(
         () => {
             // let eventDate = new Date(event.eventdate);
-            let today = moment(new Date());
-            let tomorrow = moment(new Date()).add(1, "days");
-            let nextWeek = moment(new Date(), "week").add(1, "week");
-            let showEvents;
-            if (time == "Tomorrow") {
-                console.log("Im in tomorrow");
-                console.log("Im in function");
-
-                showEvents = allMyEvents.filter(eachevent => {
-                    if (
-                        moment(
-                            eachevent.eventdate,
-                            "dddd, MMMM Do YYYY"
-                        ).isSame(tomorrow, "d")
-                    ) {
-                        return eachevent;
-                    }
-                });
-            } else if (time == "This week") {
-                console.log("im in this week");
-
-                showEvents = allMyEvents.filter(eachevent => {
-                    // console.log(new Date(eachevent.eventdate));
-                    if (
-                        moment(
-                            eachevent.eventdate,
-                            "dddd, MMMM Do YYYY"
-                        ).isSame(new Date(), "week")
-                    ) {
-                        console.log(eachevent.eventdate);
-                        return eachevent;
-                    }
-                });
-            } else if (time == "Next week") {
-                console.log("im in next week");
-
-                showEvents = allMyEvents.filter(eachevent => {
-                    // console.log(new Date(eachevent.eventdate));
-                    if (
-                        moment(
-                            eachevent.eventdate,
-                            "dddd, MMMM Do YYYY"
-                        ).isSame(nextWeek, "week")
-                    ) {
-                        console.log(eachevent.eventdate);
-                        return eachevent;
-                    }
-                });
-            } else if (time == "Today") {
-                showEvents = allMyEvents.filter(eachevent => {
-                    if (
-                        moment(
-                            eachevent.eventdate,
-                            "dddd, MMMM Do YYYY"
-                        ).isSame(today, "d")
-                    ) {
-                        return eachevent;
-                    }
-                });
-            } else if (time == "All events") {
-                showEvents = allMyEvents;
-            }
-
-            setMyEvents(showEvents);
+            setMyEvents(showEvents(time, allMyEvents));
         },
         [time]
     );
@@ -144,25 +72,6 @@ export function Category({ categoryName }) {
     const handleChange = e => {
         setTime(e.target.value);
     };
-
-    // const timeFunc = {
-    //     Tomorrow: function() {
-    //         console.log("Im in function");
-    //
-    //         let tomorrowEvents = myEvents.filter(event => {
-    //             console.log(event.eventdate);
-    //             var today = new Date();
-    //             var tomorrow = new Date();
-    //             tomorrow.setDate(today.getDate() + 1);
-    //             var eventDate = new Date(event.eventdate);
-    //             return eventDate == tomorrow;
-    //         });
-    //         setMyEvents(tomorrowEvents);
-    //     },
-    //     "Next week": () => {
-    //         console.log("Im in function");
-    //     }
-    // };
 
     return (
         <div className="categoryContainer">
