@@ -15,7 +15,7 @@ export function Profile() {
     const myEvents = useSelector(state => {
         return state.myEvents;
     });
-    const [preview, setPreview] = useState("/sober.jpg");
+    const [preview, setPreview] = useState("");
     const dispatch = useDispatch();
     const inputFile = useRef(null);
     const onButtonClick = () => {
@@ -31,6 +31,7 @@ export function Profile() {
         var formData = new FormData();
         formData.append("file", file);
         dispatch(changeAvatarAction(formData));
+        setFile("");
     };
 
     useEffect(() => {
@@ -44,10 +45,14 @@ export function Profile() {
         if (state.user && state.myEvents && state.myEvents.length) {
             console.log("in block", state.myEvents);
             return state.myEvents.filter(myevent => {
+                console.log(myevent.host_id, user.id);
                 return myevent.host_id == user.id;
             });
         }
     });
+    {
+        hosting && console.log("hosting", hosting);
+    }
 
     const attending = useSelector(state => {
         if (state.user && state.myEvents && state.myEvents.length) {
@@ -63,7 +68,7 @@ export function Profile() {
                 <div className="profile">
                     <div className="imgAndDeleteContainer">
                         <img
-                            src={user.imageurl || preview}
+                            src={preview || user.imageurl}
                             onClick={onButtonClick}
                         />
                         <input
@@ -102,7 +107,7 @@ export function Profile() {
                                     <div className="hostContainer">
                                         <h2>Hosting</h2>
                                         <ul>
-                                            {hosting != "" ? (
+                                            {hosting && hosting != "" ? (
                                                 hosting.map(myevent => (
                                                     <li key={myevent.id}>
                                                         <Link
@@ -133,7 +138,7 @@ export function Profile() {
                                             ) : (
                                                 <li>
                                                     You have no events. Why
-                                                    don´t you attend some?
+                                                    don´t you create some?
                                                 </li>
                                             )}
                                         </ul>
@@ -141,7 +146,7 @@ export function Profile() {
                                     <div className="attendContainer">
                                         <h2>Attending</h2>
                                         <ul>
-                                            {attending != "" ? (
+                                            {attending && attending != "" ? (
                                                 attending.map(myevent => (
                                                     <li key={myevent.id}>
                                                         <Link

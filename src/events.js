@@ -90,7 +90,7 @@ export function Events({ eventId }) {
                         )}
                         {user &&
                             attending &&
-                            eventDetails.host_id != user.user_id && (
+                            eventDetails.host_id != user.id && (
                             <button
                                 onClick={() => dispatch(unattend(eventId))}
                             >
@@ -130,7 +130,7 @@ export function Events({ eventId }) {
                                             >
                                                 <img
                                                     src={
-                                                        user.imageurl ||
+                                                        user.userimage ||
                                                         "/sheep.jfif"
                                                     }
                                                 />

@@ -34,13 +34,3 @@ CREATE TABLE atendees(
     event_id INT NOT NULL REFERENCES events(id) ON DELETE CASCADE,
     user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE
 );
-
--- DROP TABLE IF EXISTS chatmessages;
---
--- CREATE TABLE chatmessages(
---     id SERIAL PRIMARY KEY,
---     sender_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
---     message VARCHAR(1000),
---     receiver_id INT REFERENCES users(id) ON DELETE CASCADE,
---     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
--- );

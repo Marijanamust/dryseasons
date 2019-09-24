@@ -102,9 +102,15 @@ export function Create() {
                         placeholder="Name"
                         onChange={handleChange}
                     >
-                        {categories.map(category => (
-                            <option value={category}>{category}</option>
-                        ))}
+                        {categories.map(category =>
+                            category == "Outdoors & Adventure" ? (
+                                <option value={category} select>
+                                    {category}
+                                </option>
+                            ) : (
+                                <option value={category}>{category}</option>
+                            )
+                        )}
                     </select>
 
                     <label htmlFor="time">Time of the event</label>

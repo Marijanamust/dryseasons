@@ -136,7 +136,7 @@ app.post("/register", function(req, res) {
                         imageurl: data[0].imageurl
                     };
                     console.log("USER", req.session.user);
-                    res.json(req.session.user);
+                    res.json(data);
                 })
                 .catch(error => {
                     console.log(error);
@@ -161,7 +161,7 @@ app.post("/login", function(req, res) {
                             imageurl: data.imageurl
                         };
                         console.log("USER", req.session.user);
-                        res.json(req.session.user);
+                        res.json(data);
                         // console.log(req.session.user);
                     } else {
                         res.json(false);

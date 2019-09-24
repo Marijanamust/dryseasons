@@ -217,7 +217,7 @@ export function Search() {
                     </ul>
                     <Link
                         to={{
-                            pathname: `/searchbytime`
+                            pathname: "/category/Show all events"
                         }}
                         className="eventBox"
                     >
@@ -227,6 +227,7 @@ export function Search() {
             </div>
             <div className="horizontal">
                 <div className="popContainer">
+                    <h2>Most popular events</h2>
                     <ul>
                         {popularEvents != "" &&
                             popularEvents.map(myevent => (
