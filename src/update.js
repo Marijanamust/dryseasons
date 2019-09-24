@@ -148,9 +148,15 @@ export function Update({ eventId }) {
                             placeholder="Name"
                             onChange={handleChange}
                         >
-                            {categories.map(category => (
-                                <option value={category}>{category}</option>
-                            ))}
+                            {categories.map(category =>
+                                category == input.category ? (
+                                    <option value={category} selected>
+                                        {category}
+                                    </option>
+                                ) : (
+                                    <option value={category}>{category}</option>
+                                )
+                            )}
                         </select>
                         <label htmlFor="time">Time of the event</label>
 

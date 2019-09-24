@@ -188,22 +188,26 @@ exports.updateEventNoFile = function(
     category,
     event_id
 ) {
-    return db.query(
-        `UPDATE events
-        SET name = ($1), eventdate = ($2), eventtime =($3), location_lat=($4), location_lng=($5), address=($6),description=($7),category=($8),
+    return db
+        .query(
+            `UPDATE events
+        SET name = ($1), eventdate = ($2), eventtime =($3), location_lat=($4), location_lng=($5), address=($6),description=($7),category=($8)
         WHERE id=($9)`,
-        [
-            name,
-            date,
-            time,
-            location_lat,
-            location_lng,
-            address,
-            description,
-            category,
-            event_id
-        ]
-    );
+            [
+                name,
+                date,
+                time,
+                location_lat,
+                location_lng,
+                address,
+                description,
+                category,
+                event_id
+            ]
+        )
+        .then(({ rows }) => {
+            return rows;
+        });
 };
 
 exports.getMyEvents = function(id) {
@@ -256,11 +260,11 @@ exports.getCategory = function(category) {
     eventtime,
     events.imageurl AS eventimage
     FROM events
-    WHERE events.category ILIKE ($1) AND eventdate > now()
+    WHERE events.category ILIKE ($1) AND eventdate > now()- interval '1 day'
     ORDER BY eventdate ASC
 
 `,
-            [category]
+            [category + "%"]
         )
         .then(({ rows }) => {
             return rows;

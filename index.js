@@ -397,9 +397,7 @@ app.get("/find/:categoryName", (req, res) => {
     getCategory(category)
         .then(data => {
             console.log(data);
-            console.log(data[0].category);
-            console.log(category);
-            console.log(data[0].category == category);
+
             res.json(data);
         })
         .catch(error => {

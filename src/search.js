@@ -100,10 +100,10 @@ export function Search() {
             return events.id == myEvents[0].id;
         });
         console.log(what);
-        if (what <= 0) {
+        if (what <= 1) {
             setShowPrev(false);
         }
-        setMyEvents(allMyEvents.slice(what - 1, what + 4));
+        setMyEvents(allMyEvents.slice(what - 1, what + 3));
     };
     const nextWeekEvent = function() {
         setShowPrevWeek(true);
@@ -121,10 +121,10 @@ export function Search() {
             return events.id == weekEvents[0].id;
         });
         console.log(what);
-        if (what <= 0) {
+        if (what <= 1) {
             setShowPrevWeek(false);
         }
-        setWeekEvents(allWeekEvents.slice(what - 1, what + 4));
+        setWeekEvents(allWeekEvents.slice(what - 1, what + 3));
     };
 
     return (
