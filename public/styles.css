@@ -10,12 +10,17 @@ body {
     height: 100%;
     background-color: whitesmoke;
 }
-
+body,
+html,
+.welcomeContainer {
+    margin: 0;
+    padding: 0;
+}
 .mainDiv {
     position: absolute;
-    top: 100px;
+    top: 50px;
     width: 100%;
-    height: 100%-100px;
+    height: 100%;
     background-color: whitesmoke;
 }
 
@@ -31,13 +36,83 @@ button:hover {
     background-color: #f3d3d3;
     cursor: pointer;
 }
+a {
+    text-decoration: none;
+}
+a:hover {
+    color: #ce2e6c;
+    font-size: bold;
+}
 .welcomeContainer {
-    width: 100%;
+    width: 100vw;
     height: 100vh;
-    background-image: url("./sober.jpg");
+    background-image: url("./lemon.mp4");
     background-size: cover;
     background-repeat: no-repeat;
     background-color: whitesmoke;
+}
+#myVideo {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    min-width: 100%;
+    min-height: 100%;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+.content {
+    position: fixed;
+
+    /* background: rgba(0, 0, 0, 0.5); */
+    color: #f1f1f1;
+
+    padding: 20px;
+    font-family: "Notable", sans-serif;
+}
+
+.modal {
+    position: fixed;
+
+    bottom: 50%;
+    left: 50%;
+    transform: translate(-70%, 50%);
+}
+.firstModal {
+    position: fixed;
+    bottom: 50%;
+    left: 50%;
+    transform: translate(-50%, 40%);
+    font-size: 150px;
+    text-transform: uppercase;
+    text-align: center;
+}
+.enter {
+    width: 100px;
+    position: fixed;
+    bottom: 8%;
+
+    right: -5%;
+}
+#enterH1 {
+    font-size: 150px;
+    writing-mode: vertical-rl;
+    text-orientation: upright;
+    font-weight: 800;
+    letter-spacing: -60px;
+    text-decoration: none;
+}
+
+#enterH1:hover {
+    color: #98e2c6;
+}
+.modal h2 {
+    font-size: 50px;
+}
+.modal h1 {
+    font-size: 200px;
+    text-decoration: none;
 }
 
 .welcomeContainer a {
@@ -47,7 +122,7 @@ button:hover {
 header {
     width: 100%;
     position: fixed;
-    height: 100px;
+    height: 50px;
     width: 100%;
     top: 0px;
     left: 0px;
@@ -58,11 +133,12 @@ header {
     background-color: whitesmoke;
     color: #1f262a;
     margin: 0px;
+    border-bottom: 1px solid #87b38d;
 }
 
 header h2 {
-    font-family: "Montserrat", sans-serif;
-    border: 1px solid #1f262a
+    font-family: "Average";
+    color: #ce2e6c;
     font-size: 30px;
     margin-left: 20px;
     padding: 5px;
@@ -70,28 +146,17 @@ header h2 {
 
 .rightHead {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
     align-items: center;
-    width: 600px;
+    width: 800px;
     margin-right: 20px;
-}
-
-header img {
-    height: 70px;
-    width: 70px;
-    object-fit: cover;
-    border-radius: 100%;
-    border: 1px solid #1f262a;
 }
 
 header a {
     color: #1f262a;
     text-decoration: none;
     padding: 5px;
-}
-header a:hover {
-    border: 1px solid #1f262a;
-    color: #f3d3d3;
+    margin: 0px 40px;
 }
 
 .searchContainer img {
@@ -151,7 +216,7 @@ textarea {
     margin: 0 0 1rem;
     font-family: inherit;
     font-size: 1.125rem;
-    color: #2e2e2e;
+    color: #1f262a;
     background-color: #fefefe;
     border-radius: 4px;
     transition: box-shadow 0.5s, border-color 0.25s ease-in-out;
@@ -162,36 +227,137 @@ textarea {
     height: 200px;
 }
 
-header {
-    border-bottom: 1px solid blue;
+/* search page */
+.allEventsContainer {
+    padding: 100px 50px;
+}
+.searchIntro {
+    display: flex;
+    justify-content: center;
 }
 
-/* .inputfile {
-    width: 0.1px;
-    height: 0.1px;
-    opacity: 0;
-    overflow: hidden;
-    position: absolute;
-    z-index: -1;
-} */
+.searchIntro img {
+    width: 600px;
+    height: 400px;
 
-.allEventsContainer img, .imgAndDeleteContainer img{
-    width: 200px;
+    border-radius: 5px;
+}
+
+.leftIntro {
+    font-family: "Montserrat";
+    width: 600px;
+    margin: 50px;
+}
+
+.leftIntro h1 {
+    font-size: 50px;
+}
+.leftIntro p {
+    font-size: 25px;
+}
+
+.yourEvents,
+.eventsThisWeek,
+.eventsPop {
+    margin-top: 50px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.yourIntro,
+.weekIntro,
+.popIntro {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 50px;
+    width: 80%;
+}
+
+.yourIntro h1,
+.weekIntro h1,
+.popIntro h1 {
+    font-size: 30px;
+}
+
+.yourIntro a,
+.weekIntro a,
+.popIntro a {
+    text-decoration: none;
+    color: #ce2e6c;
+}
+.yourIntro a:hover,
+.weekIntro a:hover,
+.popIntro a:hover {
+    text-decoration: none;
+    color: #1f262a;
+}
+
+.card {
+    height: 400px;
+    width: 300px;
+    overflow: hidden;
+    margin-left: 50px;
+    margin-right: 50px;
+    border-radius: 10px;
+}
+
+.card * {
+    margin-bottom: 10px;
+}
+.card h2 {
+    color: #1f262a;
+}
+
+.time {
+    color: #ce2e6c;
+    opacity: 0.8;
+}
+.address {
+    color: #1f262a;
+    opacity: 0.7;
+}
+
+.weekContainer,
+.popContainer,
+.yourContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+ul {
+    display: flex;
+    justify-content: center;
+    list-style: none;
+    width: 80%;
+    padding-left: 50px;
+    padding-right: 50px;
+}
+
+.card img {
+    width: 300px;
     height: 200px;
     object-fit: cover;
 }
 
-ul {
-    list-style: none;
+.fas {
+    margin-right: 10px;
 }
 
-ul {
-display: flex;
-justify-content: center;
+.horizontal img {
+    width: 200px;
 }
 
-li img{
+.fa-arrow-circle-right,
+.fa-arrow-circle-left {
+    font-size: 40px;
+    color: darkgray;
+    cursor: pointer;
+}
 
-    height:200px;
-
+.icon {
+    display: flex;
+    align-items: center;
 }

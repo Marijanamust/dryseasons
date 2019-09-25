@@ -216,7 +216,7 @@ exports.getMyEvents = function(id) {
             `
     SELECT events.id, name,host_id,
     eventdate,
-    eventtime,
+    eventtime,address,
     events.imageurl AS eventimage
     FROM events
     JOIN atendees
@@ -239,7 +239,7 @@ exports.getThisWeek = function() {
             `
     SELECT events.id, name,
     eventdate,
-    eventtime,
+    eventtime,address,
     events.imageurl AS eventimage
     FROM events
     WHERE eventdate > now() AND eventdate < now() + interval '1 week'
@@ -297,7 +297,7 @@ exports.getPopular = function() {
             `SELECT events.id, events.id, name,
             eventdate,
             eventtime,
-            events.imageurl AS eventimage,COUNT(event_id) AS event_count
+            events.imageurl AS eventimage, events.address ,COUNT(event_id) AS event_count
     FROM events LEFT JOIN atendees
     ON events.id = atendees.event_id AND eventdate > now()- interval '1 day'
     GROUP BY events.id

@@ -13,10 +13,13 @@ export function Search() {
     const [myEvents, setMyEvents] = useState([]);
     const [allMyEvents, setAllMyEvents] = useState([]);
     const [popularEvents, setPopularEvents] = useState([]);
+    const [somePopularEvents, setSomePopularEvents] = useState([]);
     const [showNext, setShowNext] = useState(true);
     const [showPrev, setShowPrev] = useState(false);
     const [showNextWeek, setShowNextWeek] = useState(true);
     const [showPrevWeek, setShowPrevWeek] = useState(false);
+    const [showNextPop, setShowNextPop] = useState(true);
+    const [showPrevPop, setShowPrevPop] = useState(false);
 
     const [categories, setCategories] = useState([
         "Outdoors & Adventure",
@@ -62,8 +65,6 @@ export function Search() {
         axios
             .get("/getthisweek")
             .then(response => {
-                console.log(response.data);
-
                 let weekevents = adjustTime(response.data);
                 setAllWeekEvents(weekevents);
                 if (weekevents.length < 5) {
@@ -78,10 +79,12 @@ export function Search() {
         axios
             .get("/getpopular")
             .then(response => {
-                console.log(response.data);
-
                 let popular = adjustTime(response.data);
                 setPopularEvents(popular);
+                let chosenPop = popular.slice(0, 4);
+                setSomePopularEvents(chosenPop);
+                console.log(popularEvents);
+                console.log(somePopularEvents);
             })
             .catch(error => {
                 console.log(error);
@@ -130,45 +133,50 @@ export function Search() {
         setWeekEvents(allWeekEvents.slice(what - 1, what + 3));
     };
 
+    const nextPopEvent = function() {
+        setShowPrevPop(true);
+        let what = popularEvents.findIndex(events => {
+            return events.id == somePopularEvents[0].id;
+        });
+        // console.log("WHAT IN WEEK", what, allWeekEvents.length);
+        if (what >= popularEvents.length - 5) {
+            setShowNextPop(false);
+        }
+        setSomePopularEvents(popularEvents.slice(what + 1, what + 5));
+    };
+    const prevPopEvent = function() {
+        let what = popularEvents.findIndex(events => {
+            return events.id == somePopularEvents[0].id;
+        });
+        console.log(what);
+        if (what <= 1) {
+            setShowPrevPop(false);
+        }
+        setSomePopularEvents(popularEvents.slice(what - 1, what + 3));
+    };
+
     return (
         <div className="allEventsContainer">
+            <div className="searchIntro">
+                <div className="leftIntro">
+                    <h1>We all need a break sometimes.</h1>
+                    <p>
+                        From Dryanuary through to Sober October, this is the
+                        place to explore the world of sober possibilities.
+                        Attend events to meet other sober people, try something
+                        new, or find inspiration what to do today (and maybe go
+                        get wasted tomorrow). We don't judge, we provide.
+                        Whatever makes you tick. We have it.
+                    </p>
+                </div>
+                <div className="rightIntro">
+                    <img src="/breathe.jfif" />
+                </div>
+            </div>
             {user && myEvents != "" && (
                 <div className="yourEvents">
-                    <h2>Your events</h2>
-
-                    <div className="yourContainer">
-                        <ul>
-                            {showPrev && <p onClick={prevEvent}>Previous</p>}
-                            {myEvents != "" ? (
-                                myEvents.map(myevent => (
-                                    <li key={myevent.id}>
-                                        <Link
-                                            to={{
-                                                pathname: `/events/${
-                                                    myevent.id
-                                                }`
-                                            }}
-                                            className="eventBox"
-                                        >
-                                            <img
-                                                src={
-                                                    myevent.eventimage ||
-                                                    "/sheep.jfif"
-                                                }
-                                            />
-                                            <p>{myevent.eventdate}</p>
-                                            <p>{myevent.name}</p>
-                                        </Link>
-                                    </li>
-                                ))
-                            ) : (
-                                <li>
-                                    You have no events. Why don´t you attend
-                                    some?
-                                </li>
-                            )}
-                            {showNext && <p onClick={nextEvent}>Next</p>}
-                        </ul>
+                    <div className="yourIntro">
+                        <h2>Your events</h2>
                         <Link
                             to={{
                                 pathname: `/myprofile`
@@ -178,43 +186,61 @@ export function Search() {
                             Show All
                         </Link>
                     </div>
+                    <div className="yourContainer">
+                        {showPrev && (
+                            <div onClick={prevEvent} className="icon">
+                                <i className="fas fa-arrow-circle-left" />
+                            </div>
+                        )}
+                        <ul>
+                            {myEvents != "" ? (
+                                myEvents.map(myevent => (
+                                    <li key={myevent.id} className="card">
+                                        <Link
+                                            to={{
+                                                pathname: `/events/${
+                                                    myevent.id
+                                                }`
+                                            }}
+                                            className="eventLink"
+                                        >
+                                            <img
+                                                src={
+                                                    myevent.eventimage ||
+                                                    "/sheep.jfif"
+                                                }
+                                            />
+                                            <p className="time">
+                                                {myevent.eventdate}{" "}
+                                                {myevent.eventtime}
+                                            </p>
+                                            <h2>{myevent.name}</h2>
+                                            <p className="address">
+                                                <i className="fas fa-map-marker-alt" />
+                                                {myevent.address}
+                                            </p>
+                                        </Link>
+                                    </li>
+                                ))
+                            ) : (
+                                <li>
+                                    You have no events. Why don´t you attend
+                                    some?
+                                </li>
+                            )}
+                        </ul>
+                        {showNext && (
+                            <div onClick={nextEvent} className="icon">
+                                <i className="fas fa-arrow-circle-right" />
+                            </div>
+                        )}
+                    </div>
                 </div>
             )}
 
             <div className="eventsThisWeek">
-                <h2>Events coming up soon</h2>
-                <div className="weekContainer">
-                    <ul>
-                        {showPrevWeek && (
-                            <p onClick={prevWeekEvent}>Previous</p>
-                        )}
-                        {weekEvents != "" ? (
-                            weekEvents.map(myevent => (
-                                <li key={myevent.id}>
-                                    <Link
-                                        to={{
-                                            pathname: `/events/${myevent.id}`
-                                        }}
-                                        className="eventBox"
-                                    >
-                                        <img
-                                            src={
-                                                myevent.eventimage ||
-                                                "/sheep.jfif"
-                                            }
-                                        />
-                                        <p>{myevent.eventdate}</p>
-                                        <p>{myevent.name}</p>
-                                    </Link>
-                                </li>
-                            ))
-                        ) : (
-                            <li>
-                                You have no events. Why don´t you attend some?
-                            </li>
-                        )}
-                        {showNextWeek && <p onClick={nextWeekEvent}>Next</p>}
-                    </ul>
+                <div className="weekIntro">
+                    <h2>Events coming up soon</h2>
                     <Link
                         to={{
                             pathname: "/category/Show all events"
@@ -224,19 +250,21 @@ export function Search() {
                         Show More
                     </Link>
                 </div>
-            </div>
-            <div className="horizontal">
-                <div className="popContainer">
-                    <h2>Most popular events</h2>
+                <div className="weekContainer">
                     <ul>
-                        {popularEvents != "" &&
-                            popularEvents.map(myevent => (
-                                <li key={myevent.id}>
+                        {showPrevWeek && (
+                            <div onClick={prevWeekEvent} className="icon">
+                                <i className="fas fa-arrow-circle-left" />
+                            </div>
+                        )}
+                        {weekEvents != "" &&
+                            weekEvents.map(myevent => (
+                                <li key={myevent.id} className="card">
                                     <Link
                                         to={{
                                             pathname: `/events/${myevent.id}`
                                         }}
-                                        className="eventBox"
+                                        className="eventLink"
                                     >
                                         <img
                                             src={
@@ -244,25 +272,80 @@ export function Search() {
                                                 "/sheep.jfif"
                                             }
                                         />
-                                        <p>{myevent.eventdate}</p>
-                                        <p>{myevent.name}</p>
-                                        <p>{myevent.event_count}</p>
+                                        <p className="time">
+                                            {myevent.eventdate}{" "}
+                                            {myevent.eventtime}
+                                        </p>
+                                        <h2>{myevent.name}</h2>
+                                        <p className="address">
+                                            {myevent.address}
+                                        </p>
+                                    </Link>
+                                </li>
+                            ))}
+                        {showNextWeek && (
+                            <div onClick={nextWeekEvent} className="icon">
+                                <i className="fas fa-arrow-circle-right" />
+                            </div>
+                        )}
+                    </ul>
+                </div>
+            </div>
+            <div className="eventsPop">
+                <div className="popIntro">
+                    <h2>Most popular events</h2>
+                </div>
+                <div className="popContainer">
+                    {showPrevPop && (
+                        <div onClick={prevPopEvent} className="icon">
+                            <i className="fas fa-arrow-circle-left" />
+                        </div>
+                    )}
+                    <ul>
+                        {somePopularEvents != "" &&
+                            somePopularEvents.map(myevent => (
+                                <li key={myevent.id} className="card">
+                                    <Link
+                                        to={{
+                                            pathname: `/events/${myevent.id}`
+                                        }}
+                                        className="eventLink"
+                                    >
+                                        <img
+                                            src={
+                                                myevent.eventimage ||
+                                                "/sheep.jfif"
+                                            }
+                                        />
+                                        <p className="time">
+                                            {myevent.eventdate}{" "}
+                                            {myevent.eventtime}
+                                        </p>
+                                        <h2>{myevent.name}</h2>
+                                        <p className="address">
+                                            {myevent.address}
+                                        </p>
                                     </Link>
                                 </li>
                             ))}
                     </ul>
-                </div>
-
-                <div className="browse by category">
-                    <h2>Browse by category</h2>
-                    {categories.map(category => (
-                        <div key={category}>
-                            <Link to={{ pathname: `/category/${category}` }}>
-                                {category}
-                            </Link>
+                    {showNextPop && (
+                        <div onClick={nextPopEvent} className="icon">
+                            <i className="fas fa-arrow-circle-right" />
                         </div>
-                    ))}
+                    )}
                 </div>
+            </div>
+
+            <div className="browse by category">
+                <h2>Browse by category</h2>
+                {categories.map(category => (
+                    <div key={category}>
+                        <Link to={{ pathname: `/category/${category}` }}>
+                            {category}
+                        </Link>
+                    </div>
+                ))}
             </div>
         </div>
     );

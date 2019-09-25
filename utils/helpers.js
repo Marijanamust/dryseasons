@@ -88,7 +88,8 @@ exports.adjustTime = function(arr) {
     return arr.map(eachevent => {
         return {
             ...eachevent,
-            eventdate: moment(eachevent.eventdate).format("dddd, MMMM Do YYYY")
+            eventdate: moment(eachevent.eventdate).format("dddd, MMMM Do YYYY"),
+            eventtime: moment(eachevent.eventtime, "HH:mm:ss").format("hh:mm A")
         };
     });
 };
