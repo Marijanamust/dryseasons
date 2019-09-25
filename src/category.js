@@ -29,7 +29,8 @@ export function Category({ categoryName }) {
         "Pets",
         "Hobbies",
         "Social",
-        "Weird"
+        "Weird",
+        "Show all events"
     ]);
 
     const [timeOptions, setTimeOptions] = useState([
@@ -75,10 +76,10 @@ export function Category({ categoryName }) {
 
     return (
         <div className="categoryContainer">
-            <h2>Events this week</h2>
-            <div className="allEventsContainer">
-                <div className="allEvents">
-                    <h2>{categoryName}</h2>
+            <div className="categoryIntro">
+                <h2>{categoryName}</h2>
+                <div className="categoryChoose">
+                    <h1>Events this week</h1>
                     <select
                         name="category"
                         id="category"
@@ -96,18 +97,22 @@ export function Category({ categoryName }) {
                             )
                         )}
                     </select>
+                </div>
+            </div>
+            <div className="allcategoryContainer">
+                <div className="allEvents">
                     <div className="yourContainer">
                         <ul>
                             {myEvents && myEvents != "" ? (
                                 myEvents.map(myevent => (
-                                    <li key={myevent.id}>
+                                    <li key={myevent.id} className="card">
                                         <Link
                                             to={{
                                                 pathname: `/events/${
                                                     myevent.id
                                                 }`
                                             }}
-                                            className="eventBox"
+                                            className="eventLink"
                                         >
                                             <img
                                                 src={
@@ -115,8 +120,17 @@ export function Category({ categoryName }) {
                                                     "/sheep.jfif"
                                                 }
                                             />
-                                            <p>{myevent.eventdate}</p>
-                                            <p>{myevent.name}</p>
+                                            <div className="textCard">
+                                                <p className="time">
+                                                    {myevent.eventdate}{" "}
+                                                    {myevent.eventtime}
+                                                </p>
+                                                <h2>{myevent.name}</h2>
+                                                <p className="address">
+                                                    <i className="fas fa-map-marker-alt" />
+                                                    {myevent.address}
+                                                </p>
+                                            </div>
                                         </Link>
                                     </li>
                                 ))
@@ -130,15 +144,21 @@ export function Category({ categoryName }) {
                     </div>
                 </div>
 
-                <div className="browse by category">
-                    <h2>Browse by category</h2>
-                    {categories.map(category => (
-                        <div key={category}>
-                            <Link to={{ pathname: `/category/${category}` }}>
-                                {category}
-                            </Link>
-                        </div>
-                    ))}
+                <div className="browseCategory">
+                    <div className="categoryIntro">
+                        <h2>Other categories</h2>
+                    </div>
+                    <div className="categories">
+                        {categories.map(category => (
+                            <div key={category} className="category">
+                                <Link
+                                    to={{ pathname: `/category/${category}` }}
+                                >
+                                    {category}
+                                </Link>
+                            </div>
+                        ))}
+                    </div>
                 </div>
             </div>
         </div>

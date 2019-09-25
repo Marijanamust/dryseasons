@@ -50,64 +50,81 @@ export function Events({ eventId }) {
     });
 
     return (
-        <div>
+        <div className="bigEventContainer">
             {eventDetails && (
                 <div className="eventContainer">
                     <div className="eventIntro">
-                        <p>{eventDetails.eventdate}</p>
-                        <p>{eventDetails.eventtime}</p>
-                        <h1>{eventDetails.name}</h1>
-                        <div className="host">
-                            <img src={eventDetails.userimage || "/sober.jpg"} />
-                            <p>
-                                Hosted by {eventDetails.first}{" "}
-                                {eventDetails.last}{" "}
-                            </p>
-                            <p>In category {eventDetails.category}</p>
-                        </div>
-
-                        {user && eventDetails.host_id == user.id && (
-                            <Link
-                                to={{
-                                    pathname: `/update/${eventId}`
-                                }}
-                            >
-                                Edit event
-                            </Link>
-                        )}
-                        {eventId && (
-                            <Redirect
-                                to={{
-                                    pathname: `/events/${eventId}`
-                                }}
+                        <div className="smallIntro">
+                            <div className="host">
+                                <p>{eventDetails.eventdate}</p>
+                                <p>{eventDetails.eventtime}</p>
+                                <h1>{eventDetails.name}</h1>
+                                <img
+                                    src={eventDetails.userimage || "/sober.jpg"}
+                                />
+                                <p>
+                                    Hosted by {eventDetails.first}{" "}
+                                    {eventDetails.last}{" "}
+                                </p>
+                                <p>In category {eventDetails.category}</p>
+                            </div>
+                            <img
+                                src={eventDetails.eventimage || "/sheep.jfif"}
+                                className="eventImg"
                             />
-                        )}
+                        </div>
+                        <div className="buttonsEvent">
+                            {user && eventDetails.host_id == user.id && (
+                                <Link
+                                    to={{
+                                        pathname: `/update/${eventId}`
+                                    }}
+                                >
+                                    Edit event
+                                </Link>
+                            )}
+                            {eventId && (
+                                <Redirect
+                                    to={{
+                                        pathname: `/events/${eventId}`
+                                    }}
+                                />
+                            )}
 
-                        {user && !attending && (
-                            <button onClick={() => dispatch(attend(eventId))}>
-                                Attend
-                            </button>
-                        )}
-                        {user &&
-                            attending &&
-                            eventDetails.host_id != user.id && (
-                            <button
-                                onClick={() => dispatch(unattend(eventId))}
-                            >
-                                    Unattend
-                            </button>
-                        )}
+                            {user && !attending && (
+                                <button
+                                    onClick={() => dispatch(attend(eventId))}
+                                >
+                                    Attend
+                                </button>
+                            )}
+                            {user &&
+                                attending &&
+                                eventDetails.host_id != user.id && (
+                                <button
+                                    onClick={() =>
+                                        dispatch(unattend(eventId))
+                                    }
+                                >
+                                        Unattend
+                                </button>
+                            )}
+                        </div>
                     </div>
                     <div className="eventDesc">
-                        <img src={eventDetails.eventimage || "/sheep.jfif"} />
                         <h2>Location</h2>
-                        <a
-                            href={`https://maps.google.com/?ll=${
-                                eventDetails.location_lat
-                            },${eventDetails.location_lng}`}
-                        >
-                            {eventDetails.address}
-                        </a>
+                        <p className="address">
+                            <a
+                                href={`https://maps.google.com/?ll=${
+                                    eventDetails.location_lat
+                                },${eventDetails.location_lng}`}
+                                target="_blank"
+                            >
+                                <i className="fas fa-map-marker-alt" />
+                                {eventDetails.address}
+                            </a>
+                        </p>
+
                         <h2>Description</h2>
 
                         <p>{eventDetails.description}</p>
@@ -115,29 +132,20 @@ export function Events({ eventId }) {
 
                     <div className="eventAttendees">
                         <h2>Atendees</h2>
-                        <ul>
+                        <ul className="people">
                             {eventDetails.atendees &&
                                 eventDetails.atendees.map((user, index) => {
                                     return (
                                         <li key={index}>
-                                            <Link
-                                                to={{
-                                                    pathname: `/users/${
-                                                        user.id
-                                                    }`
-                                                }}
-                                                className="atendeesBox"
-                                            >
-                                                <img
-                                                    src={
-                                                        user.userimage ||
-                                                        "/sheep.jfif"
-                                                    }
-                                                />
-                                                <p>
-                                                    {user.first} {user.last}
-                                                </p>
-                                            </Link>
+                                            <img
+                                                src={
+                                                    user.userimage ||
+                                                    "/lemon.jpg"
+                                                }
+                                            />
+                                            <p>
+                                                {user.first} {user.last}
+                                            </p>
                                         </li>
                                     );
                                 })}

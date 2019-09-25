@@ -102,6 +102,7 @@ export function Search() {
         setMyEvents(allMyEvents.slice(what + 1, what + 5));
     };
     const prevEvent = function() {
+        setShowNext(true);
         let what = allMyEvents.findIndex(events => {
             return events.id == myEvents[0].id;
         });
@@ -123,6 +124,7 @@ export function Search() {
         setWeekEvents(allWeekEvents.slice(what + 1, what + 5));
     };
     const prevWeekEvent = function() {
+        setShowNextWeek(true);
         let what = allWeekEvents.findIndex(events => {
             return events.id == weekEvents[0].id;
         });
@@ -145,6 +147,7 @@ export function Search() {
         setSomePopularEvents(popularEvents.slice(what + 1, what + 5));
     };
     const prevPopEvent = function() {
+        setShowNextPop(true);
         let what = popularEvents.findIndex(events => {
             return events.id == somePopularEvents[0].id;
         });
@@ -210,15 +213,17 @@ export function Search() {
                                                     "/sheep.jfif"
                                                 }
                                             />
-                                            <p className="time">
-                                                {myevent.eventdate}{" "}
-                                                {myevent.eventtime}
-                                            </p>
-                                            <h2>{myevent.name}</h2>
-                                            <p className="address">
-                                                <i className="fas fa-map-marker-alt" />
-                                                {myevent.address}
-                                            </p>
+                                            <div className="textCard">
+                                                <p className="time">
+                                                    {myevent.eventdate}{" "}
+                                                    {myevent.eventtime}
+                                                </p>
+                                                <h2>{myevent.name}</h2>
+                                                <p className="address">
+                                                    <i className="fas fa-map-marker-alt" />
+                                                    {myevent.address}
+                                                </p>
+                                            </div>
                                         </Link>
                                     </li>
                                 ))
@@ -251,12 +256,12 @@ export function Search() {
                     </Link>
                 </div>
                 <div className="weekContainer">
+                    {showPrevWeek && (
+                        <div onClick={prevWeekEvent} className="icon">
+                            <i className="fas fa-arrow-circle-left" />
+                        </div>
+                    )}
                     <ul>
-                        {showPrevWeek && (
-                            <div onClick={prevWeekEvent} className="icon">
-                                <i className="fas fa-arrow-circle-left" />
-                            </div>
-                        )}
                         {weekEvents != "" &&
                             weekEvents.map(myevent => (
                                 <li key={myevent.id} className="card">
@@ -272,14 +277,17 @@ export function Search() {
                                                 "/sheep.jfif"
                                             }
                                         />
-                                        <p className="time">
-                                            {myevent.eventdate}{" "}
-                                            {myevent.eventtime}
-                                        </p>
-                                        <h2>{myevent.name}</h2>
-                                        <p className="address">
-                                            {myevent.address}
-                                        </p>
+                                        <div className="textCard">
+                                            <p className="time">
+                                                {myevent.eventdate}{" "}
+                                                {myevent.eventtime}
+                                            </p>
+                                            <h2>{myevent.name}</h2>
+                                            <p className="address">
+                                                <i className="fas fa-map-marker-alt" />
+                                                {myevent.address}
+                                            </p>
+                                        </div>
                                     </Link>
                                 </li>
                             ))}
@@ -317,14 +325,17 @@ export function Search() {
                                                 "/sheep.jfif"
                                             }
                                         />
-                                        <p className="time">
-                                            {myevent.eventdate}{" "}
-                                            {myevent.eventtime}
-                                        </p>
-                                        <h2>{myevent.name}</h2>
-                                        <p className="address">
-                                            {myevent.address}
-                                        </p>
+                                        <div className="textCard">
+                                            <p className="time">
+                                                {myevent.eventdate}{" "}
+                                                {myevent.eventtime}
+                                            </p>
+                                            <h2>{myevent.name}</h2>
+                                            <p className="address">
+                                                <i className="fas fa-map-marker-alt" />
+                                                {myevent.address}
+                                            </p>
+                                        </div>
                                     </Link>
                                 </li>
                             ))}
@@ -337,15 +348,19 @@ export function Search() {
                 </div>
             </div>
 
-            <div className="browse by category">
-                <h2>Browse by category</h2>
-                {categories.map(category => (
-                    <div key={category}>
-                        <Link to={{ pathname: `/category/${category}` }}>
-                            {category}
-                        </Link>
-                    </div>
-                ))}
+            <div className="browseCategory">
+                <div className="categoryIntro">
+                    <h2>Browse by category</h2>
+                </div>
+                <div className="categories">
+                    {categories.map(category => (
+                        <div key={category} className="category">
+                            <Link to={{ pathname: `/category/${category}` }}>
+                                {category}
+                            </Link>
+                        </div>
+                    ))}
+                </div>
             </div>
         </div>
     );

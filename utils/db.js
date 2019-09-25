@@ -258,7 +258,7 @@ exports.getCategory = function(category) {
             `
     SELECT events.id, name,
     eventdate,
-    eventtime,
+    eventtime, address,
     events.imageurl AS eventimage
     FROM events
     WHERE events.category ILIKE ($1) AND eventdate > now()- interval '1 day'

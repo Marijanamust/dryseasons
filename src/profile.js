@@ -71,6 +71,9 @@ export function Profile() {
                             src={preview || user.imageurl}
                             onClick={onButtonClick}
                         />
+                        <h1>
+                            {user.first} {user.last}
+                        </h1>
                         <input
                             onChange={addFile}
                             type="file"
@@ -89,103 +92,122 @@ export function Profile() {
                                 Upload image
                             </button>
                         )}
-                        <button
-                            onClick={showDelete}
-                            className="deleteInProfile"
-                        >
-                            Delete Profile
-                        </button>
                     </div>
-                    <div className="txtProfile">
-                        <h1>
-                            {user.first} {user.last}
-                        </h1>
-                        <div>
-                            <h3>My events</h3>
-                            {user && myEvents && (
-                                <div className="yourEvents">
-                                    <div className="hostContainer">
-                                        <h2>Hosting</h2>
-                                        <ul>
-                                            {hosting && hosting != "" ? (
-                                                hosting.map(myevent => (
-                                                    <li key={myevent.id}>
-                                                        <Link
-                                                            to={{
-                                                                pathname: `/events/${
-                                                                    myevent.id
-                                                                }`
-                                                            }}
-                                                            className="eventBox"
-                                                        >
-                                                            <img
-                                                                src={
-                                                                    myevent.eventimage ||
-                                                                    "/sheep.jfif"
-                                                                }
-                                                            />
-                                                            <p>
+
+                    {user && myEvents && (
+                        <div className="profileEvents">
+                            <h2>Hosting</h2>
+                            <div className="hostContainer">
+                                <div className="ulDiv">
+                                    <ul>
+                                        {hosting && hosting != "" ? (
+                                            hosting.map(myevent => (
+                                                <li
+                                                    key={myevent.id}
+                                                    className="card"
+                                                >
+                                                    <Link
+                                                        to={{
+                                                            pathname: `/events/${
+                                                                myevent.id
+                                                            }`
+                                                        }}
+                                                        className="eventLink"
+                                                    >
+                                                        <img
+                                                            src={
+                                                                myevent.eventimage ||
+                                                                "/sheep.jfif"
+                                                            }
+                                                        />
+                                                        <div className="textCard">
+                                                            <p className="time">
                                                                 {
                                                                     myevent.eventdate
-                                                                }
-                                                            </p>
-                                                            <p>
-                                                                {myevent.name}
-                                                            </p>
-                                                        </Link>
-                                                    </li>
-                                                ))
-                                            ) : (
-                                                <li>
-                                                    You have no events. Why
-                                                    don´t you create some?
-                                                </li>
-                                            )}
-                                        </ul>
-                                    </div>
-                                    <div className="attendContainer">
-                                        <h2>Attending</h2>
-                                        <ul>
-                                            {attending && attending != "" ? (
-                                                attending.map(myevent => (
-                                                    <li key={myevent.id}>
-                                                        <Link
-                                                            to={{
-                                                                pathname: `/events/${
-                                                                    myevent.id
-                                                                }`
-                                                            }}
-                                                            className="eventBox"
-                                                        >
-                                                            <img
-                                                                src={
-                                                                    myevent.eventimage ||
-                                                                    "/sheep.jfif"
-                                                                }
-                                                            />
-                                                            <p>
+                                                                }{" "}
                                                                 {
-                                                                    myevent.eventdate
+                                                                    myevent.eventtime
                                                                 }
                                                             </p>
-                                                            <p>
+                                                            <h2>
                                                                 {myevent.name}
+                                                            </h2>
+                                                            <p className="address">
+                                                                <i className="fas fa-map-marker-alt" />
+                                                                {
+                                                                    myevent.address
+                                                                }
                                                             </p>
-                                                        </Link>
-                                                    </li>
-                                                ))
-                                            ) : (
-                                                <li>
-                                                    You have no events. Why
-                                                    don´t you attend some?
+                                                        </div>
+                                                    </Link>
                                                 </li>
-                                            )}
-                                        </ul>
-                                    </div>
+                                            ))
+                                        ) : (
+                                            <li>
+                                                You have no events. Why don´t
+                                                you create some?
+                                            </li>
+                                        )}
+                                    </ul>
                                 </div>
-                            )}
+                            </div>
+                            <h2>Attending</h2>
+                            <div className="attendContainer">
+                                <div className="ulDiv">
+                                    <ul>
+                                        {attending && attending != "" ? (
+                                            attending.map(myevent => (
+                                                <li
+                                                    key={myevent.id}
+                                                    className="card"
+                                                >
+                                                    <Link
+                                                        to={{
+                                                            pathname: `/events/${
+                                                                myevent.id
+                                                            }`
+                                                        }}
+                                                        className="eventLink"
+                                                    >
+                                                        <img
+                                                            src={
+                                                                myevent.eventimage ||
+                                                                "/sheep.jfif"
+                                                            }
+                                                        />
+                                                        <div className="textCard">
+                                                            <p className="time">
+                                                                {
+                                                                    myevent.eventdate
+                                                                }{" "}
+                                                                {
+                                                                    myevent.eventtime
+                                                                }
+                                                            </p>
+                                                            <h2>
+                                                                {myevent.name}
+                                                            </h2>
+                                                            <p className="address">
+                                                                <i className="fas fa-map-marker-alt" />
+                                                                {
+                                                                    myevent.address
+                                                                }
+                                                            </p>
+                                                        </div>
+                                                    </Link>
+                                                </li>
+                                            ))
+                                        ) : (
+                                            <li>
+                                                You have no events. Why don´t
+                                                you attend some?
+                                            </li>
+                                        )}
+                                    </ul>
+                                </div>
+                            </div>
                         </div>
-                    </div>
+                    )}
                 </div>
             )}
         </div>
