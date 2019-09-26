@@ -37,9 +37,6 @@ export function Profile() {
     useEffect(() => {
         dispatch(getMyEvents());
     }, []);
-    const showDelete = function() {
-        console.log("delete me");
-    };
 
     const hosting = useSelector(state => {
         if (state.user && state.myEvents && state.myEvents.length) {
@@ -68,7 +65,7 @@ export function Profile() {
                 <div className="profile">
                     <div className="imgAndDeleteContainer">
                         <img
-                            src={preview || user.imageurl}
+                            src={preview || user.imageurl || "/lemon.jpg"}
                             onClick={onButtonClick}
                         />
                         <h1>
@@ -144,8 +141,10 @@ export function Profile() {
                                             ))
                                         ) : (
                                             <li>
-                                                You have no events. Why don´t
-                                                you create some?
+                                                <Link to="/create">
+                                                    You have no events. Why
+                                                    don´t you create some?
+                                                </Link>
                                             </li>
                                         )}
                                     </ul>
@@ -199,8 +198,11 @@ export function Profile() {
                                             ))
                                         ) : (
                                             <li>
-                                                You have no events. Why don´t
-                                                you attend some?
+                                                <Link to="/search">
+                                                    You are not attending any
+                                                    events. Why don´t you try
+                                                    some?
+                                                </Link>
                                             </li>
                                         )}
                                     </ul>

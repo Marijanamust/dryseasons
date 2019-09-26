@@ -44,6 +44,7 @@ export function Search() {
     const user = useSelector(state => {
         return state.user;
     });
+
     useEffect(() => {
         axios
             .get("/getmyevents")
@@ -83,8 +84,7 @@ export function Search() {
                 setPopularEvents(popular);
                 let chosenPop = popular.slice(0, 4);
                 setSomePopularEvents(chosenPop);
-                console.log(popularEvents);
-                console.log(somePopularEvents);
+                console.log("POPULAR", popular);
             })
             .catch(error => {
                 console.log(error);
@@ -179,7 +179,7 @@ export function Search() {
             {user && myEvents != "" && (
                 <div className="yourEvents">
                     <div className="yourIntro">
-                        <h2>Your events</h2>
+                        <h1>Your events</h1>
                         <Link
                             to={{
                                 pathname: `/myprofile`
@@ -245,7 +245,7 @@ export function Search() {
 
             <div className="eventsThisWeek">
                 <div className="weekIntro">
-                    <h2>Events coming up soon</h2>
+                    <h1>Events coming up soon</h1>
                     <Link
                         to={{
                             pathname: "/category/Show all events"
@@ -301,7 +301,7 @@ export function Search() {
             </div>
             <div className="eventsPop">
                 <div className="popIntro">
-                    <h2>Most popular events</h2>
+                    <h1>Most popular events</h1>
                 </div>
                 <div className="popContainer">
                     {showPrevPop && (
@@ -331,6 +331,10 @@ export function Search() {
                                                 {myevent.eventtime}
                                             </p>
                                             <h2>{myevent.name}</h2>
+                                            <p className="count">
+                                                <i className="fas fa-running" />
+                                                {myevent.event_count}
+                                            </p>
                                             <p className="address">
                                                 <i className="fas fa-map-marker-alt" />
                                                 {myevent.address}
@@ -350,7 +354,7 @@ export function Search() {
 
             <div className="browseCategory">
                 <div className="categoryIntro">
-                    <h2>Browse by category</h2>
+                    <h1>Browse by category</h1>
                 </div>
                 <div className="categories">
                     {categories.map(category => (

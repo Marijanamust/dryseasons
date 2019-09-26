@@ -136,7 +136,7 @@ app.post("/register", function(req, res) {
                         imageurl: data[0].imageurl
                     };
                     console.log("USER", req.session.user);
-                    res.json(data);
+                    res.json(data[0]);
                 })
                 .catch(error => {
                     console.log(error);
@@ -147,7 +147,7 @@ app.post("/register", function(req, res) {
 });
 
 app.post("/login", function(req, res) {
-    console.log(req.body.email);
+    console.log(req.body.email, req.body.password);
     getHash(req.body.email)
         .then(data => {
             compare(req.body.password, data.password)

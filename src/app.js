@@ -4,7 +4,7 @@ import { BrowserRouter, Route, Link } from "react-router-dom";
 import { socket } from "./socket";
 import { Search } from "./search";
 import { Profile } from "./profile";
-
+import { AllPlaces } from "./allplaces";
 import { Events } from "./events";
 import { Create } from "./create";
 import { Category } from "./category";
@@ -60,6 +60,7 @@ export function App() {
                         <Route exact path="/map" component={Map} />
                         <Route exact path="/myprofile" component={Profile} />
                         <Route path="/create" component={Create} />
+                        <Route path="/allplaces" component={AllPlaces} />
                         <Route
                             path="/category/:categoryName"
                             render={props => {

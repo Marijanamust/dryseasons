@@ -13,7 +13,7 @@ export function Update({ eventId }) {
     const [input, setInput] = useState({});
     const [file, setFile] = useState();
     const [redirect, setRedirect] = useState(false);
-    const [preview, setPreview] = useState("/sober.jpg");
+    const [preview, setPreview] = useState("");
     const [categories, setCategories] = useState([
         "Outdoors & Adventure",
         "Tech",
@@ -128,7 +128,7 @@ export function Update({ eventId }) {
     return (
         <div>
             <div className="searchContainer">
-                <h2>CREATE</h2>
+                <h2>UPDATE</h2>
                 {input && (
                     <form>
                         <label htmlFor="name">Name of the event</label>
@@ -183,11 +183,10 @@ export function Update({ eventId }) {
                             setLocation={setLocation}
                             oldAddress={input.address}
                         />
-                        <p>input.address {input.address}</p>
 
                         <label htmlFor="file">Set the image of the event</label>
                         <img
-                            src={input.eventimage || preview}
+                            src={preview || input.eventimage}
                             onClick={onButtonClick}
                         />
 

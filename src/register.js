@@ -39,8 +39,8 @@ export function Register() {
     };
 
     return (
-        <div>
-            <h3>JOIN ALMOST EVERYONE</h3>
+        <div className="register">
+            <h3>JOIN SOBERNESS</h3>
             {error && <p>Oooops Error</p>}
             <form>
                 <input

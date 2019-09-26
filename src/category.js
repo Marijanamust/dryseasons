@@ -45,6 +45,8 @@ export function Category({ categoryName }) {
     });
     useEffect(
         () => {
+            window.scrollTo(0, 0);
+
             console.log("I am in", categoryName);
             axios
                 .get("/find/" + categoryName)
@@ -102,7 +104,7 @@ export function Category({ categoryName }) {
             <div className="allcategoryContainer">
                 <div className="allEvents">
                     <div className="yourContainer">
-                        <ul>
+                        <ul className="categoryUl">
                             {myEvents && myEvents != "" ? (
                                 myEvents.map(myevent => (
                                     <li key={myevent.id} className="card">

@@ -278,7 +278,7 @@ exports.getAllEvents = function() {
             `
     SELECT events.id, name,
     eventdate,
-    eventtime,
+    eventtime,address,location_lat, location_lng,
     events.imageurl AS eventimage
     FROM events
     WHERE eventdate > now()- interval '1 day'

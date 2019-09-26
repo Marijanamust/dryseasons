@@ -84,7 +84,14 @@ export function getMyEvents() {
             return {
                 type: "MY_EVENTS",
                 myEvents: response.data.map(eachevent => {
-                    return { ...eachevent, eventdate: mydate };
+                    return {
+                        ...eachevent,
+                        eventdate: mydate,
+                        eventtime: moment(
+                            eachevent.eventtime,
+                            "HH:mm:ss"
+                        ).format("hh:mm A")
+                    };
                 })
             };
         })

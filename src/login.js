@@ -23,7 +23,7 @@ export function Login() {
     });
     const login = (e, input) => {
         e.preventDefault();
-
+        console.log(input);
         return axios
             .post("/login", input)
             .then(response => {
@@ -40,7 +40,7 @@ export function Login() {
     };
 
     return (
-        <div>
+        <div className="register">
             <h3>LOGIN</h3>
             {error && <p>Oooops Error</p>}
             <form>

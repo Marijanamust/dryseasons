@@ -7,7 +7,7 @@ import PlacesAutocomplete from "react-places-autocomplete";
 import { LocationSearchInput } from "./location";
 
 export function Create() {
-    const [input, setInput] = useState({});
+    const [input, setInput] = useState({ category: "Outdoors & Adventure" });
     const [file, setFile] = useState();
     const [preview, setPreview] = useState("/sober.jpg");
     const [eventId, seteventId] = useState(false);
@@ -102,15 +102,9 @@ export function Create() {
                         placeholder="Name"
                         onChange={handleChange}
                     >
-                        {categories.map(category =>
-                            category == "Outdoors & Adventure" ? (
-                                <option value={category} select>
-                                    {category}
-                                </option>
-                            ) : (
-                                <option value={category}>{category}</option>
-                            )
-                        )}
+                        {categories.map(category => (
+                            <option value={category}>{category}</option>
+                        ))}
                     </select>
 
                     <label htmlFor="time">Time of the event</label>
