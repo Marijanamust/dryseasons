@@ -572,15 +572,23 @@ ul {
 }
 
 .mapCard img {
-    width: 100px;
-    height: 100px;
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
 }
 
 .mapCard {
     height: 250px;
-    width: 100px;
+    width: 150px;
     overflow: hidden;
-    margin-left: 50px;
-    margin-right: 50px;
     border-radius: 10px;
+}
+.mapChoose {
+    margin: 40px 40px 40px 40px;
+}
+
+.mapDiv {
+    display: flex;
+    justify-content: center;
+    border: 1px solid pink;
 }

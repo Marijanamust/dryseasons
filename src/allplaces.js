@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getMyEvents } from "./actions";
 import { adjustTime } from "../utils/helpers";
 var moment = require("moment");
+import { showEvents } from "../utils/helpers";
 
 // import { MapWithAMarker } from "./mymapcomponent";
 import {
@@ -18,14 +19,16 @@ import {
 // import DatePicker from "react-datepicker";
 
 export function AllPlaces() {
-    const [markers, setMarkers] = useState([
-        { id: 1, lat: 52.4870183, lng: 13.42498409999996, description: "wow" },
-        {
-            id: 2,
-            lat: 52.4986146,
-            lng: 13.43135099999995,
-            description: "wowsie"
-        }
+    const [allMyEvents, setAllMyEvents] = useState([]);
+    const [input, setInput] = useState("");
+    const [time, setTime] = useState("");
+    const [markers, setMarkers] = useState([]);
+    const [timeOptions, setTimeOptions] = useState([
+        "All events",
+        "Today",
+        "This week",
+        "Tomorrow",
+        "Next week"
     ]);
     const [isOpen, setisOpen] = useState(false);
     useEffect(() => {
@@ -50,6 +53,7 @@ export function AllPlaces() {
                 });
 
                 setMarkers(adjustAddress);
+                setAllMyEvents(adjustAddress);
             })
             .catch(error => {
                 console.log(error);
@@ -119,16 +123,49 @@ export function AllPlaces() {
             </GoogleMap>
         ))
     );
+    useEffect(
+        () => {
+            // let eventDate = new Date(event.eventdate);
+            setMarkers(showEvents(time, allMyEvents));
+        },
+        [time]
+    );
+    const handleChange = e => {
+        setTime(e.target.value);
+    };
 
     return (
-        <div>
-            <h1>Im here</h1>
-            <MapWithAMarker
-                googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyBDw2suhFutPk48rmPnEWxCm9WqI7xpWp0&v=3.exp&libraries=geometry,drawing,places"
-                loadingElement={<div style={{ height: `100%` }} />}
-                containerElement={<div style={{ height: `600px` }} />}
-                mapElement={<div style={{ height: `100%` }} />}
-            />
+        <div className="searchMap">
+            <div className="mapChoose">
+                <h2>Search for events</h2>
+                <select
+                    name="category"
+                    id="category"
+                    type="text"
+                    placeholder="Name"
+                    onChange={handleChange}
+                >
+                    {timeOptions.map(timeOpt =>
+                        timeOpt == time ? (
+                            <option value={timeOpt} selected>
+                                {timeOpt}
+                            </option>
+                        ) : (
+                            <option value={timeOpt}>{timeOpt}</option>
+                        )
+                    )}
+                </select>
+            </div>
+            <div className="mapDiv">
+                <MapWithAMarker
+                    googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyBDw2suhFutPk48rmPnEWxCm9WqI7xpWp0&v=3.exp&libraries=geometry,drawing,places"
+                    loadingElement={<div style={{ height: `100%` }} />}
+                    containerElement={
+                        <div style={{ height: `500px`, width: `800px` }} />
+                    }
+                    mapElement={<div style={{ height: `100%` }} />}
+                />
+            </div>
         </div>
     );
 }

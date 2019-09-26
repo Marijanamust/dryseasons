@@ -40,9 +40,7 @@ export function Category({ categoryName }) {
         "Tomorrow",
         "Next week"
     ]);
-    const user = useSelector(state => {
-        return state.user;
-    });
+
     useEffect(
         () => {
             window.scrollTo(0, 0);

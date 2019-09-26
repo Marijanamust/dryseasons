@@ -37,6 +37,7 @@ export function App() {
                             {!user && <Link to="/login">Login</Link>}
                             {!user && <Link to="/register">Register</Link>}
                             <Link to="/search">Search</Link>
+                            <Link to="/allplaces">Map</Link>
                             {user && (
                                 <Link to="/myprofile">Hi, {user.first}</Link>
                             )}
@@ -57,7 +58,7 @@ export function App() {
                                 );
                             }}
                         />
-                        <Route exact path="/map" component={Map} />
+
                         <Route exact path="/myprofile" component={Profile} />
                         <Route path="/create" component={Create} />
                         <Route path="/allplaces" component={AllPlaces} />
