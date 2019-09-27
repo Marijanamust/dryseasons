@@ -121,7 +121,8 @@ export function Update({ eventId }) {
         setInput({
             ...input,
             location_lat: location.lat,
-            location_lng: location.lng
+            location_lng: location.lng,
+            address: location.address
         });
     };
 

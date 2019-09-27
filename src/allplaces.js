@@ -65,6 +65,7 @@ export function AllPlaces() {
             <GoogleMap
                 defaultZoom={12}
                 defaultCenter={{ lat: 52.4870183, lng: 13.42498409999996 }}
+                options={{ streetViewControl: false, mapTypeControl: false }}
             >
                 {markers &&
                     markers.map((marker, index) => {
@@ -75,6 +76,10 @@ export function AllPlaces() {
                                     position={{
                                         lat: marker.location_lat,
                                         lng: marker.location_lng
+                                    }}
+                                    icon={{
+                                        url:
+                                            "http://maps.google.com/mapfiles/ms/icons/pink-dot.png"
                                     }}
                                     onClick={() => setisOpen(marker.id)}
                                 />

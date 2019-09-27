@@ -45,7 +45,7 @@ export class LocationSearchInput extends React.Component {
                     <div>
                         <input
                             {...getInputProps({
-                                placeholder: "Search Places ...",
+                                placeholder: this.props.oldAddress,
                                 className: "location-search-input"
                             })}
                         />
