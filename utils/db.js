@@ -222,7 +222,7 @@ exports.getMyEvents = function(id) {
     JOIN atendees
     ON (events.host_id = $1 AND events.id=atendees.event_id)
     OR (atendees.user_id=$1 AND events.id=atendees.event_id)
-    WHERE eventdate > now()
+    WHERE eventdate > now()- interval '1 day'
     ORDER BY eventdate ASC
 
 `,
@@ -242,7 +242,7 @@ exports.getThisWeek = function() {
     eventtime,address,
     events.imageurl AS eventimage
     FROM events
-    WHERE eventdate > now() AND eventdate < now() + interval '1 week'
+    WHERE eventdate > now()- interval '1 day' AND eventdate < now()+ interval '5 days'
     ORDER BY eventdate ASC
 
 `

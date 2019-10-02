@@ -60,7 +60,7 @@ export function Events({ eventId }) {
                                 <p>{eventDetails.eventtime}</p>
                                 <h1>{eventDetails.name}</h1>
                                 <img
-                                    src={eventDetails.userimage || "/sober.jpg"}
+                                    src={eventDetails.userimage || "/lemon.jpg"}
                                 />
                                 <p>
                                     Hosted by {eventDetails.first}{" "}

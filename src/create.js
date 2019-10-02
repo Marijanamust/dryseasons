@@ -2,6 +2,8 @@ import React from "react";
 import axios from "./axios";
 import { useState, useRef } from "react";
 import { Redirect, Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { getMyEvents } from "./actions";
 // import DatePicker from "react-datepicker";
 import PlacesAutocomplete from "react-places-autocomplete";
 import { LocationSearchInput } from "./location";
@@ -11,6 +13,7 @@ export function Create() {
     const [file, setFile] = useState();
     const [preview, setPreview] = useState("/sober.jpg");
     const [eventId, seteventId] = useState(false);
+    const dispatch = useDispatch();
     const [categories, setCategories] = useState([
         "Outdoors & Adventure",
         "Tech",
@@ -52,9 +55,15 @@ export function Create() {
         formData.append("address", input.address);
         formData.append("file", file);
 
-        axios.post("/addevent", formData).then(response => {
-            seteventId(response.data);
-        });
+        axios
+            .post("/addevent", formData)
+            .then(response => {
+                dispatch(getMyEvents());
+                seteventId(response.data);
+            })
+            .catch(error => {
+                console.log(error);
+            });
     };
     const addFile = e => {
         console.log("I want to add file");

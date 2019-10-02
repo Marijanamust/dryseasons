@@ -168,8 +168,7 @@ export function Search() {
                         place to explore the world of sober possibilities.
                         Attend events to meet other sober people, try something
                         new, or find inspiration what to do today (and maybe go
-                        get wasted tomorrow). We don't judge, we provide.
-                        Whatever makes you tick. We have it.
+                        get wasted tomorrow). We don't judge, we inspire.
                     </p>
                 </div>
                 <div className="rightIntro">

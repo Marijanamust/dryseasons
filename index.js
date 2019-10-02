@@ -198,7 +198,7 @@ app.get("/loggedin", (req, res) => {
 app.post("/addevent", uploader.single("file"), s3.upload, (req, res) => {
     // req.file refers to the file that was just uploaded
     // req.body still refers to the values we type in the input fields
-    console.log("DATE", req.body.date);
+    console.log("DATA", req.body);
     // const { filename } = req.file;
     const url =
         config.s3Url + `${req.session.user.user_id}/${req.file.filename}`;
@@ -235,7 +235,7 @@ app.post("/addevent", uploader.single("file"), s3.upload, (req, res) => {
         req.session.user.user_id
     )
         .then(data => {
-            console.log("GOT THE TABLE", data[0].id);
+            console.log("GOT THE TABLE", data[0]);
             attend(data[0].id, req.session.user.user_id).then(() => {
                 res.json(data[0].id);
             });
