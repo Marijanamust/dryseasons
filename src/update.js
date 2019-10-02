@@ -1,13 +1,9 @@
 import React, { useEffect } from "react";
 import axios from "./axios";
 import { useState, useRef } from "react";
-import { Redirect, Link } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 var moment = require("moment");
-import PlacesAutocomplete from "react-places-autocomplete";
 import { LocationSearchInput } from "./location";
-import { useDispatch, useSelector } from "react-redux";
-import { getEventDetails } from "./actions";
-// import DatePicker from "react-datepicker";
 
 export function Update({ eventId }) {
     const [input, setInput] = useState({});
@@ -34,30 +30,16 @@ export function Update({ eventId }) {
         "Weird"
     ]);
 
-    const user = useSelector(state => {
-        return state.user;
-    });
-    const eventDetails = useSelector(state => {
-        return state.eventDetails;
-    });
-
     const inputFile = useRef(null);
     const onButtonClick = () => {
-        // `current` points to the mounted file input element
         inputFile.current.click();
     };
 
     useEffect(() => {
-        console.log("User", user);
         axios
             .get("/geteventdetails/" + eventId)
             .then(response => {
-                console.log(response.data);
-                console.log(response.data.eventdate);
                 let display = new Date(response.data.eventdate);
-                // let mydate = moment(response.data.eventdate).format(
-                //     "dddd, MMMM Do YYYY"
-                // );
 
                 let iso = display.toISOString();
                 let endDate = moment(iso).format("YYYY-MM-DD");
@@ -65,17 +47,12 @@ export function Update({ eventId }) {
                     ...response.data,
                     eventdate: endDate
                 };
-                console.log("display", display);
-                console.log("iso", iso);
+
                 setInput(details);
             })
             .catch(error => {
                 console.log(error);
             });
-
-        // return ()=>{
-        //     props.resetList
-        // }
     }, []);
 
     const handleChange = e => {
@@ -83,11 +60,9 @@ export function Update({ eventId }) {
     };
     const handleClick = e => {
         e.preventDefault();
-        // console.log("INPUT", input);
-        // console.log("NAME", input.name);
-        // console.log("DESC", input.description);
+
         let iso = new Date(input.eventdate).toISOString();
-        console.log(iso);
+
         var formData = new FormData();
         formData.append("name", input.name);
         formData.append("description", input.description);
@@ -98,12 +73,10 @@ export function Update({ eventId }) {
         formData.append("category", input.category);
         formData.append("address", input.address);
         formData.append("file", file);
-        console.log("POST TIME");
+
         axios
             .post("/updateevent/" + eventId, formData)
-            .then(response => {
-                console.log("NEW DATE");
-                console.log("success");
+            .then(() => {
                 setRedirect(true);
             })
             .catch(error => {
@@ -111,11 +84,9 @@ export function Update({ eventId }) {
             });
     };
     const addFile = e => {
-        console.log("I want to add file");
         setFile(e.target.files[0]);
-        console.log(URL.createObjectURL(e.target.files[0]));
+
         setPreview(URL.createObjectURL(e.target.files[0]));
-        console.log(preview);
     };
     const setLocation = location => {
         setInput({

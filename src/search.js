@@ -49,8 +49,6 @@ export function Search() {
         axios
             .get("/getmyevents")
             .then(response => {
-                console.log(response.data);
-
                 let myevents = adjustTime(response.data);
                 setAllMyEvents(myevents);
                 if (myevents.length < 5) {
@@ -84,7 +82,6 @@ export function Search() {
                 setPopularEvents(popular);
                 let chosenPop = popular.slice(0, 4);
                 setSomePopularEvents(chosenPop);
-                console.log("POPULAR", popular);
             })
             .catch(error => {
                 console.log(error);
@@ -106,7 +103,7 @@ export function Search() {
         let what = allMyEvents.findIndex(events => {
             return events.id == myEvents[0].id;
         });
-        console.log(what);
+
         if (what <= 1) {
             setShowPrev(false);
         }
@@ -117,7 +114,7 @@ export function Search() {
         let what = allWeekEvents.findIndex(events => {
             return events.id == weekEvents[0].id;
         });
-        console.log("WHAT IN WEEK", what, allWeekEvents.length);
+
         if (what >= allWeekEvents.length - 5) {
             setShowNextWeek(false);
         }
@@ -128,7 +125,7 @@ export function Search() {
         let what = allWeekEvents.findIndex(events => {
             return events.id == weekEvents[0].id;
         });
-        console.log(what);
+
         if (what <= 1) {
             setShowPrevWeek(false);
         }
@@ -140,7 +137,7 @@ export function Search() {
         let what = popularEvents.findIndex(events => {
             return events.id == somePopularEvents[0].id;
         });
-        // console.log("WHAT IN WEEK", what, allWeekEvents.length);
+        //
         if (what >= popularEvents.length - 5) {
             setShowNextPop(false);
         }
@@ -151,7 +148,7 @@ export function Search() {
         let what = popularEvents.findIndex(events => {
             return events.id == somePopularEvents[0].id;
         });
-        console.log(what);
+
         if (what <= 1) {
             setShowPrevPop(false);
         }

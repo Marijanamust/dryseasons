@@ -1,7 +1,5 @@
 import React from "react";
 import ReactDOM from "react-dom";
-// import Hello from "./hello";
-
 import { App } from "./app";
 import { Welcome } from "./welcome";
 import { Provider } from "react-redux";
@@ -31,6 +29,3 @@ if (location.pathname === "/") {
 }
 
 ReactDOM.render(elem, document.querySelector("main"));
-
-//every place you have axios you put import from ./axios
-//middleware for setting token to cookie, and copy of axios

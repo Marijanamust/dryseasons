@@ -1,9 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import axios from "./axios";
-import { useState, useEffect } from "react";
-
 import { useDispatch, useSelector } from "react-redux";
-
 import { Redirect, Link } from "react-router-dom";
 import { addUser } from "./actions";
 
@@ -11,8 +8,6 @@ export function Register() {
     const [input, setInput] = useState({});
     const [error, setError] = useState(false);
     const dispatch = useDispatch();
-    // const [date, setDate] = useState(new Date());
-    // const [startDate, setStartDate] = useState(new Date());
 
     const handleChange = e => {
         setInput({ ...input, [e.target.name]: e.target.value });
@@ -28,7 +23,6 @@ export function Register() {
             .then(response => {
                 if (response.data) {
                     dispatch(addUser(response.data));
-                    // location.replace("/search");
                 } else {
                     setError(true);
                 }

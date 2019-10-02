@@ -93,7 +93,6 @@ if (process.env.NODE_ENV != "production") {
 
 app.get("/register", (req, res) => {
     if (req.session.user) {
-        console.log("in register");
         res.redirect("/search");
     } else {
         res.sendFile(__dirname + "/index.html");
@@ -110,10 +109,10 @@ app.get("/login", (req, res) => {
 app.post("/upload", uploader.single("file"), s3.upload, async (req, res) => {
     const url =
         config.s3Url + `${req.session.user.user_id}/${req.file.filename}`;
-    console.log(url);
+
     try {
         const data = await updateAvatar(url, req.session.user.user_id);
-        console.log("image", data);
+
         res.json(data[0]);
     } catch (error) {
         console.log(error);
@@ -128,14 +127,13 @@ app.post("/register", function(req, res) {
         hash(req.body.password).then(hash => {
             addRegister(req.body.first, req.body.last, req.body.email, hash)
                 .then(data => {
-                    console.log("DATA", data);
                     req.session.user = {
                         first: data[0].first,
                         last: data[0].last,
                         user_id: data[0].id,
                         imageurl: data[0].imageurl
                     };
-                    console.log("USER", req.session.user);
+
                     res.json(data[0]);
                 })
                 .catch(error => {
@@ -147,22 +145,19 @@ app.post("/register", function(req, res) {
 });
 
 app.post("/login", function(req, res) {
-    console.log(req.body.email, req.body.password);
     getHash(req.body.email)
         .then(data => {
             compare(req.body.password, data.password)
                 .then(match => {
                     if (match) {
-                        console.log("DATA IN LOGIN", data);
                         req.session.user = {
                             first: data.first,
                             last: data.last,
                             user_id: data.id,
                             imageurl: data.imageurl
                         };
-                        console.log("USER", req.session.user);
+
                         res.json(data);
-                        // console.log(req.session.user);
                     } else {
                         res.json(false);
                     }
@@ -179,9 +174,7 @@ app.post("/login", function(req, res) {
 });
 
 app.get("/loggedin", (req, res) => {
-    console.log("logged in got dispatched");
     if (req.session.user) {
-        console.log("req session user", req.session.user.user_id);
         getUser(req.session.user.user_id)
             .then(data => {
                 res.json(data[0]);
@@ -191,18 +184,17 @@ app.get("/loggedin", (req, res) => {
             });
     } else {
         res.json(false);
-        console.log("user is not logged in");
     }
 });
 
 app.post("/addevent", uploader.single("file"), s3.upload, (req, res) => {
     // req.file refers to the file that was just uploaded
     // req.body still refers to the values we type in the input fields
-    console.log("DATA", req.body);
+
     // const { filename } = req.file;
     const url =
         config.s3Url + `${req.session.user.user_id}/${req.file.filename}`;
-    // console.log(url);
+
     let {
         name,
         date,
@@ -213,14 +205,6 @@ app.post("/addevent", uploader.single("file"), s3.upload, (req, res) => {
         description,
         category
     } = req.body;
-    console.log("url", url);
-    console.log("req.body", req.body);
-    // Date.prototype.addDays = function(days) {
-    //     let dat = new Date(this.valueOf());
-    //     dat.setDate(dat.getDate() + days);
-    //     return dat;
-    // };
-    // date = new Date(date).addDays(1);
 
     insertEvent(
         name,
@@ -235,7 +219,6 @@ app.post("/addevent", uploader.single("file"), s3.upload, (req, res) => {
         req.session.user.user_id
     )
         .then(data => {
-            console.log("GOT THE TABLE", data[0]);
             attend(data[0].id, req.session.user.user_id).then(() => {
                 res.json(data[0].id);
             });
@@ -246,17 +229,8 @@ app.post("/addevent", uploader.single("file"), s3.upload, (req, res) => {
 });
 
 app.get("/geteventdetails/:eventId", (req, res) => {
-    console.log("IN GET VENT");
     Promise.all([getEvent(req.params.eventId), getAtendees(req.params.eventId)])
         .then(data => {
-            console.log("event", data[0][0]);
-            console.log("atend", data[1]);
-            console.log("DATE", data[0][0].eventdate);
-            // let mydate = moment(data[0].eventdate).format("dddd, MMMM Do YYYY");
-            // moment(data[0].eventdate)
-            //     .calendar()
-            //     .format("dddd");
-            // console.log("my date", mydate);
             if (data[0].length) {
                 let details = {
                     ...data[0][0],
@@ -279,13 +253,9 @@ app.get("/logout", (req, res) => {
 });
 
 app.post("/attend/:eventId", (req, res) => {
-    console.log("REQ BODY", req.session.user.user_id);
-    console.log("REq params", req.params.eventId);
     attend(req.params.eventId, req.session.user.user_id)
         .then(() => {
-            console.log("inserted the atendee");
             getAtendees(req.params.eventId).then(data => {
-                console.log(data[0]);
                 res.json(data);
             });
         })
@@ -295,13 +265,9 @@ app.post("/attend/:eventId", (req, res) => {
 });
 
 app.post("/unattend/:eventId", (req, res) => {
-    console.log("user id", req.session.user.user_id);
-    console.log("REq params", req.params.eventId);
     unattend(req.params.eventId, req.session.user.user_id)
         .then(() => {
-            console.log("unattended");
             getAtendees(req.params.eventId).then(data => {
-                console.log(data[0]);
                 res.json(data);
             });
         })
@@ -315,7 +281,6 @@ app.post(
     uploader.single("file"),
     s3.upload,
     (req, res) => {
-        console.log("DATE", req.body.eventdate);
         const {
             name,
             eventdate,
@@ -338,8 +303,7 @@ app.post(
                 category,
                 req.params.eventId
             )
-                .then(data => {
-                    console.log("UPDATED");
+                .then(() => {
                     res.json(true);
                 })
                 .catch(error => {
@@ -349,10 +313,6 @@ app.post(
             const url =
                 config.s3Url +
                 `${req.session.user.user_id}/${req.file.filename}`;
-            // console.log(url);
-
-            // console.log("url", url);
-            // console.log("req.body", req.body);
 
             updateEvent(
                 name,
@@ -367,7 +327,6 @@ app.post(
                 req.params.eventId
             )
                 .then(data => {
-                    console.log("UPDATED");
                     res.json(true);
                 })
                 .catch(error => {
@@ -377,24 +336,22 @@ app.post(
     }
 );
 app.get("/getmyevents", (req, res) => {
-    console.log("IN GET my events");
-    getMyEvents(req.session.user.user_id)
-        .then(data => {
-            console.log("events", data);
-
-            res.json(data);
-        })
-        .catch(error => {
-            console.log(error);
-        });
+    if (req.session.user) {
+        getMyEvents(req.session.user.user_id)
+            .then(data => {
+                res.json(data);
+            })
+            .catch(error => {
+                console.log(error);
+            });
+    } else {
+        res.json(false);
+    }
 });
 
 app.get("/getthisweek", (req, res) => {
-    console.log("IN GET this week events");
     getThisWeek()
         .then(data => {
-            console.log("this week", data);
-
             res.json(data);
         })
         .catch(error => {
@@ -403,11 +360,8 @@ app.get("/getthisweek", (req, res) => {
 });
 
 app.get("/getpopular", (req, res) => {
-    console.log("IN GET popular events");
     getPopular()
         .then(data => {
-            console.log("popular", data);
-
             res.json(data);
         })
         .catch(error => {
@@ -417,13 +371,10 @@ app.get("/getpopular", (req, res) => {
 
 app.get("/find/:categoryName", (req, res) => {
     let category = req.params.categoryName;
-    console.log(category);
+
     if (req.params.categoryName == "Show all events") {
-        console.log("Im in all events");
         getAllEvents()
             .then(data => {
-                console.log(data);
-
                 res.json(data);
             })
             .catch(error => {
@@ -432,8 +383,6 @@ app.get("/find/:categoryName", (req, res) => {
     } else {
         getCategory(category)
             .then(data => {
-                console.log(data);
-
                 res.json(data);
             })
             .catch(error => {
@@ -442,7 +391,6 @@ app.get("/find/:categoryName", (req, res) => {
     }
 });
 
-//this route always needs to be last, out everything above it..
 app.get("*", function(req, res) {
     res.sendFile(__dirname + "/index.html");
 });

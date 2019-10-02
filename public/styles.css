@@ -16,9 +16,21 @@ html,
     margin: 0;
     padding: 0;
 }
+
+.disclaimer {
+    position: fixed;
+    top: 50px;
+    height: 50px;
+    background-color: #ce2e6c;
+    color: black;
+    font-weight: bold;
+    z-index: 999;
+    padding-left: 100px;
+    padding-right: 100px;
+}
 .mainDiv {
     position: absolute;
-    top: 50px;
+    top: 100px;
     width: 100%;
     height: 100%;
     background-color: whitesmoke;

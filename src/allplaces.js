@@ -1,14 +1,10 @@
 import React, { useEffect } from "react";
 import axios from "./axios";
-import { useState, useRef } from "react";
-import { Redirect, Link } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { getMyEvents } from "./actions";
-import { adjustTime } from "../utils/helpers";
-var moment = require("moment");
+import { useState } from "react";
+import { Link } from "react-router-dom";
+const moment = require("moment");
 import { showEvents } from "../utils/helpers";
 
-// import { MapWithAMarker } from "./mymapcomponent";
 import {
     withScriptjs,
     withGoogleMap,
@@ -16,11 +12,9 @@ import {
     Marker,
     InfoWindow
 } from "react-google-maps";
-// import DatePicker from "react-datepicker";
 
 export function AllPlaces() {
     const [allMyEvents, setAllMyEvents] = useState([]);
-    const [input, setInput] = useState("");
     const [time, setTime] = useState("");
     const [markers, setMarkers] = useState([]);
     const [timeOptions, setTimeOptions] = useState([
@@ -35,9 +29,7 @@ export function AllPlaces() {
         axios
             .get("/find/Show all events")
             .then(response => {
-                console.log(response.data);
                 let adjustAddress = response.data.map(eachEvent => {
-                    console.log();
                     return {
                         ...eachEvent,
                         eventdate: moment(eachEvent.eventdate).format(
@@ -130,7 +122,6 @@ export function AllPlaces() {
     );
     useEffect(
         () => {
-            // let eventDate = new Date(event.eventdate);
             setMarkers(showEvents(time, allMyEvents));
         },
         [time]

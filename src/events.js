@@ -15,7 +15,6 @@ export function Events({ eventId }) {
     });
     const dispatch = useDispatch();
 
-    console.log("EVENTID", eventId);
     useEffect(
         () => {
             dispatch(getEventDetails(eventId));
@@ -27,19 +26,11 @@ export function Events({ eventId }) {
         [eventId]
     );
     const attending = useSelector(state => {
-        console.log("event details", state.eventDetails);
-        {
-            state.eventDetails &&
-                console.log("DATE", state.eventDetails.eventdate);
-        }
         if (
             state.user &&
             state.eventDetails &&
             state.eventDetails.atendees.length &&
             state.eventDetails.atendees.find(atendee => {
-                console.log("atendee.id", atendee.id);
-                console.log("user.user_id", user.id);
-                console.log("host", eventDetails.host_id);
                 return atendee.id == user.id;
             })
         ) {

@@ -3,9 +3,9 @@ const fs = require("fs");
 
 let secrets;
 if (process.env.NODE_ENV == "production") {
-    secrets = process.env; // in prod the secrets are environment variables
+    secrets = process.env;
 } else {
-    secrets = require("./secrets"); // in dev they are in secrets.json which is listed in .gitignore
+    secrets = require("./secrets");
 }
 
 const s3 = new aws.S3({
@@ -17,10 +17,8 @@ exports.upload = function(req, res, next) {
     if (!req.file) {
         next();
     } else {
-        // console.log("FILE DATA", req.file);
-        // console.log("USER", req.session.user.user_id);
         const filename = `${req.session.user.user_id}/${req.file.filename}`;
-        console.log("FILENAME", filename);
+
         const { mimetype, size, path } = req.file;
         const promise = s3
             .putObject({
@@ -46,8 +44,8 @@ exports.upload = function(req, res, next) {
 
 exports.delete = function(user_id) {
     var params = {
-        Bucket: "spicedling" /* required */,
-        Prefix: user_id + "/" // Can be your folder name
+        Bucket: "spicedling",
+        Prefix: user_id + "/"
     };
     let promises = [];
 
@@ -57,8 +55,6 @@ exports.delete = function(user_id) {
         .then(function(data) {
             console.log("data", data);
             data["Contents"].forEach(function(arrayItem) {
-                // console.log(arrayItem["Key"]);
-                console.log("PROMISES", promises);
                 promises.push(
                     s3
                         .deleteObject({
@@ -67,15 +63,13 @@ exports.delete = function(user_id) {
                         })
                         .promise()
                 );
-                // console.log("To BE DELETED OBJECT", promises);
             });
         });
     return promise.then(() => {
-        console.log("About to wait for promises");
         return Promise.all(promises).then(() => {
             var params = {
-                Bucket: "spicedling" /* required */,
-                Prefix: user_id + "/" // Can be your folder name
+                Bucket: "spicedling",
+                Prefix: user_id + "/"
             };
             s3.listObjectsV2(params, function(err, data) {
                 console.log("CHECK ARE THERE STILL IMAGES", data["Contents"]);

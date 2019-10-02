@@ -1,6 +1,6 @@
 import React from "react";
 import axios from "./axios";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 import { useDispatch, useSelector } from "react-redux";
 
@@ -11,8 +11,6 @@ export function Login() {
     const [input, setInput] = useState({});
     const [error, setError] = useState(false);
     const dispatch = useDispatch();
-    // const [date, setDate] = useState(new Date());
-    // const [startDate, setStartDate] = useState(new Date());
 
     const handleChange = e => {
         setInput({ ...input, [e.target.name]: e.target.value });
@@ -23,11 +21,10 @@ export function Login() {
     });
     const login = (e, input) => {
         e.preventDefault();
-        console.log(input);
+
         return axios
             .post("/login", input)
             .then(response => {
-                console.log("COME BACK", response);
                 if (response.data) {
                     dispatch(addUser(response.data));
                 } else {

@@ -40,7 +40,6 @@ exports.showEvents = function(time, allMyEvents) {
         console.log("im in this week");
 
         showEvents = allMyEvents.filter(eachevent => {
-            // console.log(new Date(eachevent.eventdate));
             if (
                 moment(eachevent.eventdate, "dddd, MMMM Do YYYY").isSame(
                     new Date(),
@@ -55,7 +54,6 @@ exports.showEvents = function(time, allMyEvents) {
         console.log("im in next week");
 
         showEvents = allMyEvents.filter(eachevent => {
-            // console.log(new Date(eachevent.eventdate));
             if (
                 moment(eachevent.eventdate, "dddd, MMMM Do YYYY").isSame(
                     nextWeek,

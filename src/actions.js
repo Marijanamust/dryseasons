@@ -10,7 +10,6 @@ export function addUser(user) {
 
 export function loggedIn() {
     return axios.get("/loggedin").then(response => {
-        console.log("LOGGED IN", response.data);
         return {
             type: "LOGGED_IN",
             user: response.data
@@ -22,7 +21,6 @@ export function getEventDetails(eventId) {
     return axios
         .get("/geteventdetails/" + eventId)
         .then(response => {
-            console.log();
             return {
                 type: "EVENT_DETAILS",
                 eventDetails: {
@@ -44,8 +42,6 @@ export function attend(eventId) {
     return axios
         .post("/attend/" + eventId)
         .then(response => {
-            console.log("attend", response.data);
-
             return {
                 type: "ATTEND",
                 atendees: response.data
@@ -60,8 +56,6 @@ export function unattend(eventId) {
     return axios
         .post("/unattend/" + eventId)
         .then(response => {
-            console.log("attend", response.data);
-
             return {
                 type: "ATTEND",
                 atendees: response.data
@@ -76,7 +70,6 @@ export function getMyEvents() {
     return axios
         .get("/getmyevents")
         .then(response => {
-            console.log(response.data);
             let mydate = moment(response.data.eventdate).format(
                 "dddd, MMMM Do YYYY"
             );
@@ -101,11 +94,9 @@ export function getMyEvents() {
 }
 
 export function changeAvatarAction(formData) {
-    console.log("IM in actions");
     return axios
         .post("/upload", formData)
         .then(response => {
-            console.log(response);
             return {
                 type: "CHANGE_AVATAR",
                 imageurl: response.data.imageurl

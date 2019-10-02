@@ -1,11 +1,9 @@
 import React, { useEffect } from "react";
-import axios from "./axios";
 import { useState, useRef } from "react";
-import { Redirect, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getMyEvents } from "./actions";
 import { changeAvatarAction } from "./actions";
-// import DatePicker from "react-datepicker";
 
 export function Profile() {
     const [file, setFile] = useState("");
@@ -19,7 +17,6 @@ export function Profile() {
     const dispatch = useDispatch();
     const inputFile = useRef(null);
     const onButtonClick = () => {
-        // `current` points to the mounted file input element
         inputFile.current.click();
     };
     const addFile = e => {
@@ -40,16 +37,11 @@ export function Profile() {
 
     const hosting = useSelector(state => {
         if (state.user && state.myEvents && state.myEvents.length) {
-            console.log("in block", state.myEvents);
             return state.myEvents.filter(myevent => {
-                console.log(myevent.host_id, user.id);
                 return myevent.host_id == user.id;
             });
         }
     });
-    {
-        hosting && console.log("hosting", hosting);
-    }
 
     const attending = useSelector(state => {
         if (state.user && state.myEvents && state.myEvents.length) {

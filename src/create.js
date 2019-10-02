@@ -1,11 +1,11 @@
 import React from "react";
 import axios from "./axios";
 import { useState, useRef } from "react";
-import { Redirect, Link } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { Redirect } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import { getMyEvents } from "./actions";
 // import DatePicker from "react-datepicker";
-import PlacesAutocomplete from "react-places-autocomplete";
+
 import { LocationSearchInput } from "./location";
 
 export function Create() {
@@ -33,17 +33,13 @@ export function Create() {
         "Social",
         "Weird"
     ]);
-    // const [date, setDate] = useState(new Date());
-    // const [startDate, setStartDate] = useState(new Date());
 
     const handleChange = e => {
         setInput({ ...input, [e.target.name]: e.target.value });
-
-        console.log(input);
     };
     const handleClick = e => {
         e.preventDefault();
-        console.log("TIME", input.time);
+
         var formData = new FormData();
         formData.append("name", input.name);
         formData.append("description", input.description);
@@ -66,12 +62,9 @@ export function Create() {
             });
     };
     const addFile = e => {
-        console.log("I want to add file");
-
         setFile(e.target.files[0]);
-        console.log(URL.createObjectURL(e.target.files[0]));
+
         setPreview(URL.createObjectURL(e.target.files[0]));
-        console.log(preview);
     };
 
     const inputFile = useRef(null);
@@ -86,7 +79,6 @@ export function Create() {
             location_lng: location.lng,
             address: location.address
         });
-        console.log(location);
     };
 
     return (

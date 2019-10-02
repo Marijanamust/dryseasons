@@ -1,7 +1,5 @@
 import React, { useEffect } from "react";
-import axios from "./axios";
 import { BrowserRouter, Route, Link } from "react-router-dom";
-import { socket } from "./socket";
 import { Search } from "./search";
 import { Profile } from "./profile";
 import { AllPlaces } from "./allplaces";
@@ -45,6 +43,14 @@ export function App() {
                             {user && <a href="/logout">Logout</a>}
                         </div>
                     </header>
+                    <div className="disclaimer">
+                        This is a project in development, all the data is here
+                        only for display purposes and has no real value. All
+                        events are fake and so are the users. You can still
+                        check the functionality of the website by creating dummy
+                        profile, dummy events and click attending. I hope you
+                        enjoy them. Don't attend them.{" "}
+                    </div>
                     <div className="mainDiv">
                         <Route exact path="/search" component={Search} />
 

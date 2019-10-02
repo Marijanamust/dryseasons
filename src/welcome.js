@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
-import { useState, useRef } from "react";
-import { Link } from "react-router-dom";
+import { useState } from "react";
 
 export function Welcome() {
     const [modal, setModal] = useState(false);

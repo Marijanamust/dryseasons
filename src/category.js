@@ -2,15 +2,12 @@ import React from "react";
 import axios from "./axios";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-var moment = require("moment");
-import { showEvents, adjustTime } from "../utils/helpers";
 
-import { useDispatch, useSelector } from "react-redux";
+import { showEvents, adjustTime } from "../utils/helpers";
 
 export function Category({ categoryName }) {
     const [myEvents, setMyEvents] = useState([]);
     const [allMyEvents, setAllMyEvents] = useState([]);
-    const [input, setInput] = useState("");
     const [time, setTime] = useState("");
     const [categories, setCategories] = useState([
         "Outdoors & Adventure",
@@ -45,12 +42,9 @@ export function Category({ categoryName }) {
         () => {
             window.scrollTo(0, 0);
 
-            console.log("I am in", categoryName);
             axios
                 .get("/find/" + categoryName)
                 .then(response => {
-                    console.log(response.data);
-
                     let allevents = adjustTime(response.data);
                     setAllMyEvents(allevents);
                     setMyEvents(allevents);
@@ -64,7 +58,6 @@ export function Category({ categoryName }) {
 
     useEffect(
         () => {
-            // let eventDate = new Date(event.eventdate);
             setMyEvents(showEvents(time, allMyEvents));
         },
         [time]
