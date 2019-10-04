@@ -66,13 +66,23 @@ All the features:
 
 ## <a name="showroom"></a>Showroom
 
+## Search Events
+
 [![Search Events](https://i.gyazo.com/dd70d0735e0583a0387747e7432907e0.gif)](https://gyazo.com/dd70d0735e0583a0387747e7432907e0)
+
+## Edit your event
 
 [![Edit your event](https://i.gyazo.com/6f0ac49c4c9a781edc89752267a73caa.gif)](https://gyazo.com/6f0ac49c4c9a781edc89752267a73caa)
 
+## Event Page - Attend
+
 [![Event Page - Attend](https://i.gyazo.com/14e1c930f46a062a7d019cc644355ca6.gif)](https://gyazo.com/14e1c930f46a062a7d019cc644355ca6)
 
+## Most popular events
+
 [![Most popular events](https://i.gyazo.com/1d5e543e5338895a5bb2a4ee6b2c535b.gif)](https://gyazo.com/1d5e543e5338895a5bb2a4ee6b2c535b)
+
+## Map of events
 
 [![Map of events](https://i.gyazo.com/0b98c46b0ebfd35a478305e83c1bc4f4.gif)](https://gyazo.com/0b98c46b0ebfd35a478305e83c1bc4f4)
 
@@ -80,7 +90,7 @@ All the features:
 
 This project was supposed to be finished and presented in 6 days so I ignored some obvious functionalities not to lose time, especially the ones I have done before on other projects and I am sure I can easily do again.
 
-Functionalities I want to add:
+Next functionalities I want to add:
 
 -   Develop profile - delete profile (automatically all hosted events), add interests sections
 -   Develop event page - add discussion board, delete event by host - all attendees get a message that the event has been deleted
@@ -90,11 +100,11 @@ Functionalities I want to add:
 
 "From Dryanuary through to Sober October, this is the place to explore the world of sober possibilities. Attend events to meet other sober people, try something new, or find inspiration what to do today (and maybe go get wasted tomorrow). We don't judge, we inspire"
 
-When I started the web development bootcamp, I decided to have a break from alcohol so I can help my brain cope with such a large influx of information every day and not to waste time on brain-wrecking hangovers. Obviously, I haven't become smarter, just slightly more stressed out but I did have a bit more time and for most of it I had to still be in a bar, listening to drunk friends and wondering what other alcohol free overpriced drink the bar might have and when is it ok to go home. There is just so much of Jever Fun that a person can take.
+When I started the web development bootcamp, I decided to have a break from alcohol so I can help my brain cope with such a large influx of information every day and not to waste time on brain-wrecking hangovers. Obviously, I haven't become smarter, just slightly more stressed but I did have a bit more time and for most of it I had to still be in a bar, listening to drunk friends and wondering what other alcohol free overpriced drink the bar might have and when is it ok to go home. There is just so much of Jever Fun that a person can take.
 
-When living in big cities, especially "party" places like Berlin, it is sometimes hard to socialise in any other manner than going to a bar even up to a point where NOT binge drinking is seen as weakness and a sign of the ultimate bore. It makes us more comfortable with people, it makes us want to talk to people, sometimes even for 10h (who would do that sober), it makes us actually like people or at least be able to stand them. It makes us feel great about ourselves and how much fun we are having. So you drink again. Cause all your friends are and cause that's what you do when you meet. Cause the work hours are done. Cause it's Friday. Cause it's any day of the week, does it really matter?
+When living in big cities, especially "party" places like Berlin, it is sometimes hard to socialise in any other manner than going to a bar, even up to a point where NOT binge drinking is seen as a weakness and a sign of the ultimate bore. It makes us more comfortable with people, it makes us want to talk to people, sometimes even for 10h (who would do that sober), it makes us actually like people or at least be able to stand them. It makes us feel great about ourselves and how much fun we are having. So we drink again. Cause all our friends are and cause that's what you do when you meet. Cause the work hours are done. Cause it's Friday. Cause it's any day of the week, does it really matter?
 
-When we started doing our final project, I didn't have any inspiration and one of the teachers told me - just think about something that you personally would like to use - and Dry Seasons came up. So I could find inspiration what to do and find other likeminded people on these events that are not slurring and telling me about that one time someone was mean to them. On the other hand, this is not a platform to advise people against drinking [(that's these guys)](https://www.aa.org/), just to give inspiration and different options of having fun.
+When we started doing our final project, I didn't have any inspiration and the teacher told me - just think about something that you personally would like to use - and Dry Seasons came up. So I could find inspiration what to do and find other likeminded people on these events that are not slurring and telling me about that one time someone was mean to them. On the other hand, this is not a platform to advise people against drinking [(that's these guys)](https://www.aa.org/), just to give inspiration and different options of having fun.
 
 In the perfect world I would completely develop this network, find some sponsors, get more people to work on it, have a great office but still able to work from anywhere too, create events, hire comedians to write articles on drinking and perform on our events, attend those events, still maybe have a drink from time to time (we don't judge, so shouldn't you), show people it's possible to have fun without alcohol, build a community, change lives, get more comedians on board. All the seven impossible things before breakfast.
 
