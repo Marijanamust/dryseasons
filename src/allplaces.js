@@ -2,9 +2,9 @@ import React, { useEffect } from "react";
 import axios from "./axios";
 import { useState } from "react";
 import { Link } from "react-router-dom";
-const moment = require("moment");
 import { showEvents } from "../utils/helpers";
-
+const secrets = require("../secrets");
+const moment = require("moment");
 import {
     withScriptjs,
     withGoogleMap,
@@ -154,7 +154,9 @@ export function AllPlaces() {
             </div>
             <div className="mapDiv">
                 <MapWithAMarker
-                    googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyBDw2suhFutPk48rmPnEWxCm9WqI7xpWp0&v=3.exp&libraries=geometry,drawing,places"
+                    googleMapURL={`https://maps.googleapis.com/maps/api/js?key=${
+                        secrets.API_KEY
+                    }&v=3.exp&libraries=geometry,drawing,places`}
                     loadingElement={<div style={{ height: `100%` }} />}
                     containerElement={
                         <div style={{ height: `500px`, width: `800px` }} />
