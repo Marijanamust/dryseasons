@@ -19,12 +19,16 @@ HTML, CSS, Node.js / Express, Bundle.js, PostgreSQL, React, React Hooks, Redux;
 
 Google Maps Javascript API, Google Places API, Moment.js, AWS - S3, react-places-autocomplete, react-google-maps
 
+Csurf, Cookie Session, Bcrypt
+
 ## What I have? <a name="what-i-have"></a>
 
 All the features:
 
 -   Log in / Registration
--   Logged in users:
+
+*   Logged in users:
+
     -   Create an event - name, date (calendar), time, address (autocomplete), image upload (Multer, AWS - S3), description, category
     -   Edit their own event - all previous data displayed
     -   See other users' events
